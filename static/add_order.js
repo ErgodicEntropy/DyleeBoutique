@@ -1,4 +1,6 @@
-let products = JSON.parse(localStorage.getItem("products") || []);
+let products = JSON.parse(localStorage.getItem("products")) || [];
+let customerId = JSON.parse(localStorage.getItem("customerId")) || 1; 
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
 function saveProducts(){
   localStorage.setItem("products", JSON.stringify(products));
@@ -14,6 +16,18 @@ function findOrderProduct(productName){//find the product object associated with
   return null; 
 }
 
+//find customer id by name (you can add more candidate keys) -> add phone number
+function findCustomerID(orders, customerName, customerPhone){ //function breaks down if two different customers have same full name
+  for (let k = 0; k < orders.length; k++){
+    const order = orders[k];
+    if (order.customer == customerName.trim() && order.phone == customerPhone.trim()){ //order attributes are already trimmed
+      return order.cid;
+    }
+  }
+  return null; 
+}
+
+const phoneRegex = /^\+212[0-9]{9}$/; 
 
 const manualForm = document.getElementById('manualForm'); 
 const orderInput = document.getElementById("orderInputs"); 
@@ -100,52 +114,79 @@ const price = document.getElementById('price'); //required
 const city = document.getElementById('city') || ""; 
 const address = document.getElementById('address') || ""; 
 
+const phoneDiv = document.getElementById('phoneDiv');
 
 manualForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (phone){
+      try {
+        const match = phoneRegex.test(phone.value.trim()); 
+        if (!match){
+          const span = document.createElement('span');
+          span.textContent = "";
+          span.className = "text-sm font-semibold text-red-500 mt-1";
+          span.textContent = "Invalid phone number";
+          phoneDiv.appendChild(span);
+          throw new Error("Invalid phone number");
+        }
 
-  const productName = product.value.trim();
-  const productObj = findOrderProduct(productName);
-  if (productObj){
-    productObj.stock -= Number(quantity.value.trim()); //product removed from the product list
-    saveProducts(); 
+        const productName = product.value.trim();
+        const productObj = findOrderProduct(productName);
+        if (productObj){
+          productObj.stock -= Number(quantity.value.trim()); //product removed from the product list
+          saveProducts(); 
+        }
+
+        
+        const CID = findCustomerID(orders, customer.value, phone.value); 
+        const id = CID ?? customerId; 
+        console.log(CID);
+        if (id == customerId){
+          customerId++
+          localStorage.setItem("customerId", customerId);
+        };
+        const data = {
+            cid: id,
+            customer: customer.value.trim(),
+            phone: phone.value.trim(),
+            product: product.value.trim(),
+            quantity: Number(quantity.value.trim()),
+            price: price.value.trim(),
+            city: city.value.trim(),
+            address: address.value.trim()
+          };
+
+
+        for (const key in data) {
+          if (!data[key]) {
+            alert(`Please fill the ${key} field.`);
+            return;
+          }
+        }
+
+        if (!data){
+          console.log("empty data");
+        }
+
+        window.localStorage.setItem("orderdata", JSON.stringify(data))
+
+          Swal.fire({
+          icon: "success",
+          title: "Add",
+          text: "Order Added!",
+          timer: 2000,
+          timerProgressBar: true
+        });
+
+        setTimeout(()=>{
+          window.location.href = './orders.html';
+        }, 3000)
+
+
+      }catch(err){
+        console.log(err.message);
+      }
   }
-
-  const data = {
-    customer: customer.value.trim(),
-    phone: phone.value.trim(),
-    product: product.value.trim(),
-    quantity: Number(quantity.value.trim()),
-    price: price.value.trim(),
-    city: city.value.trim(),
-    address: address.value.trim()
-  };
-
-  for (const key in data) {
-    if (!data[key]) {
-      alert(`Please fill the ${key} field.`);
-      return;
-    }
-  }
-
-  if (!data){
-    console.log("empty data");
-  }
-
-  window.localStorage.setItem("orderdata", JSON.stringify(data))
-
-    Swal.fire({
-    icon: "success",
-    title: "Add",
-    text: "Order Added!",
-    timer: 2000,
-    timerProgressBar: true
-  });
-
-  setTimeout(()=>{
-    window.location.href = './orders.html';
-  }, 3000)
-
 
 });
 

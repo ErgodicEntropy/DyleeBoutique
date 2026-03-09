@@ -1,14 +1,16 @@
 // Load orders from localStorage
 const orders = JSON.parse(localStorage.getItem("orders")) || [];
 const customers = JSON.parse(localStorage.getItem("customers")) || [];
+let customerCounter = JSON.parse(localStorage.getItem("customerCounter")) || 0; 
 
 // Group orders by customer
 let customersMap = {};
 
+//you can add order product taken by the customer and quantities of each, and other social media links
 orders.forEach(order => {
-  const key = order.id;
-  if (!customersMap[key]) {
-    customersMap[key] = {
+  const key = order.cid; //customer Id
+  if (!key) {
+    customersMap[customerCounter] = {
       name: order.customer,
       status: "new",
       phone: order.phone,
@@ -18,19 +20,30 @@ orders.forEach(order => {
       receivedOrders: 0,
       spent: 0
     };
-  } else {
-    customersMap = {...customersMap[key], status:"returned"};
-  }
+    customersMap[customerCounter].totalOrders += 1;
+    // Only confirmed, delivered or shipped orders count for received orders and spending
+    if (order.status === "Confirmed") {
+      customersMap[customerCounter].receivedOrders += 1;
+      customersMap[customerCounter].spent += Number(order.price) || 0;
+    }
+    if (!customers.includes(customersMap[customerCounter])){
+      customers.push(customersMap[customerCounter]);
+    }
 
-  customersMap[key].totalOrders += 1;
-  
-  // Only confirmed, delivered or shipped orders count for received orders and spending
-  if (order.status === "Confirmed") {
-    customersMap[key].receivedOrders += 1;
-    customersMap[key].spent += Number(order.price) || 0;
-  }
-  if (!customers.includes(customersMap[key])){
-    customers.push(customersMap[key]);
+    customerCounter++;
+    localStorage.setItem("customerCounter", customerCounter);
+  } else {
+    customersMap[key] = {...customersMap[key], status:"returned"};
+    customersMap[key].totalOrders += 1;
+    // Only confirmed, delivered or shipped orders count for received orders and spending
+    if (order.status === "Confirmed") {
+      customersMap[key].receivedOrders += 1;
+      customersMap[key].spent += Number(order.price) || 0;
+    }
+    if (!customers.includes(customersMap[key])){
+      customers.push(customersMap[key]);
+    }
+
   }
 
 });

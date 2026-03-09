@@ -75,6 +75,7 @@ products.forEach(product => {
         stockMessage = "You're out of stock!";
     }
 
+    // https://www.marjanemall.ma/catalogsearch/result?q=mickey+mouse+t+shirt
 
 productBody.insertAdjacentHTML("beforeend",`
 
@@ -429,7 +430,6 @@ tableDiv.classList.add("hidden");
 };
 
 
-
 /* ----------------------- DOWNLOAD JSON ----------------------- */
 
 downloadBtn.onclick = () => {
@@ -446,6 +446,7 @@ link.download = "products.json";
 
 link.click();
 
+URL.revokeObjectURL(link.href);
 };
 
 
@@ -471,6 +472,8 @@ link.href = URL.createObjectURL(blob);
 link.download = "products.csv";
 
 link.click();
+
+URL.revokeObjectURL(link.href);
 
 };
 

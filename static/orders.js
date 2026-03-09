@@ -33,6 +33,18 @@ function saveOrders() {
 function renderTable() {
   orderBody.innerHTML = "";
 
+  if (orders.length === 0){
+    orderBody.innerHTML = `
+      <tr>
+      <td colspan="9" class="p-6 text-center text-gray-500">
+      No orders yet
+      </td>
+      </tr>
+    `;
+
+    return;
+  }
+
   orders.forEach(order => {
     const productName = order.product;
     const product = findOrderProduct(productName);
@@ -114,6 +126,17 @@ function renderTable() {
 function renderCards() {
   cardDiv.innerHTML = "";
 
+  if (orders.length === 0){
+    cardDiv.innerHTML = `
+    <div class="col-span-full text-center p-10 bg-white rounded-xl shadow">
+    No orders yet
+    </div>
+    `;
+
+    return;
+  }
+
+
   orders.forEach(order => {
     const statusClass =
       order.status === "Confirmed"
@@ -161,8 +184,9 @@ document.addEventListener("click", e => {
   if (e.target.classList.contains("deleteBtn")) {
     const productName = orders[index].product;
     const product = findOrderProduct(productName);
+
     if (product){
-      product.stock += orders[index].quantity; //product returned to the product list
+      product.stock += Number(orders[index].quantity); //product returned to the product list
       saveProducts(); 
     }
     orders.splice(index, 1);
@@ -178,7 +202,7 @@ document.addEventListener("click", e => {
     const productName = orders[index].product;
     const product = findOrderProduct(productName);
     if (product){
-      product.stock += orders[index].quantity; //product returned to the product list
+      product.stock += Number(orders[index].quantity); //product returned to the product list
       saveProducts(); 
     }
     saveOrders();

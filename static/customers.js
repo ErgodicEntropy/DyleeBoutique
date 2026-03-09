@@ -1,14 +1,16 @@
 // Load orders from localStorage
 const orders = JSON.parse(localStorage.getItem("orders")) || [];
+const customers = JSON.parse(localStorage.getItem("customers")) || [];
 
 // Group orders by customer
-const customersMap = {};
+let customersMap = {};
 
 orders.forEach(order => {
   const key = order.id;
   if (!customersMap[key]) {
     customersMap[key] = {
       name: order.customer,
+      status: "new",
       phone: order.phone,
       city: order.city,
       address: order.address,
@@ -16,6 +18,8 @@ orders.forEach(order => {
       receivedOrders: 0,
       spent: 0
     };
+  } else {
+    customersMap = {...customersMap[key], status:"returned"};
   }
 
   customersMap[key].totalOrders += 1;
@@ -25,7 +29,13 @@ orders.forEach(order => {
     customersMap[key].receivedOrders += 1;
     customersMap[key].spent += Number(order.price) || 0;
   }
+  if (!customers.includes(customersMap[key])){
+    customers.push(customersMap[key]);
+  }
+
 });
+
+localStorage.setItem("customers", JSON.stringify(customers)); 
 
 // Convert map to array and sort by totalOrders descending
 let customersArray = Object.values(customersMap).sort((a,b)=> b.totalOrders - a.totalOrders);
@@ -50,6 +60,7 @@ container.innerHTML = customersArray.map(c => `
         "bg-gray-100 text-gray-800"
       }">${c.rank}</span>
     </div>
+    <p class="text-gray-500 text-sm"><span class="font-medium">Status:</span> ${c.status}</p>
     <p class="text-gray-500 text-sm"><span class="font-medium">Total Orders:</span> ${c.totalOrders}</p>
     <p class="text-gray-500 text-sm"><span class="font-medium">Received Orders:</span> ${c.receivedOrders}</p>
     <p class="text-gray-500 text-sm"><span class="font-medium">Spent:</span> ${c.spent} DH</p>

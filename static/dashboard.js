@@ -32,11 +32,55 @@ function computeCityPercentages(orders) {
   return percentages;
 }
 
+function computeProductOrders(orders) {
+  const totalCounts = {};
+  const deliveredCounts = {}
+  // Count orders per product
+  orders.forEach(order => {
+    const product = order.product;
+
+    if (!totalCounts[product]) {
+      totalCounts[product] = 0;
+      deliveredCounts[product] = 0;
+    }
+
+    totalCounts[product]++;
+
+    if (order.status == "Confirmed"){
+      deliveredCounts[product]++;
+    }
+
+  });
+
+  return {total: totalCounts, delivered: deliveredCounts};
+}
+
+function computeProductPrices(orders){
+  const productPrices = {}
+  // Count orders per product
+  orders.forEach(order => {
+    const product = order.product;
+
+    if (!productPrices[product]) {
+      productPrices[product] = 0;
+    }
+
+    if (order.status == "Confirmed"){
+      productPrices[product] += Number(order.price);
+    }
+
+  });
+
+  return productPrices;
+
+}
 document.addEventListener("DOMContentLoaded", () => {
 
   const orders = JSON.parse(localStorage.getItem("orders")) || [];
   const products = JSON.parse(localStorage.getItem("products")) || [];
   const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+  const customers = JSON.parse(localStorage.getItem("customers")) || [];
+
 
   const totalOrders = orders.length;
   const deliveredOrders = orders.filter(o => o.status === "Confirmed"); // Delivered = Confirmed = Shipped = Received
@@ -74,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const percentages = computeCityPercentages(temporaryOrders);
   const locationsDiv = document.getElementById('locationsDiv');
 
-  temporaryOrders = temporaryOrders.map(to => to.city).filter((value,index,self)=> {return self.indexOf(value) == index}).map(city => ({city:city, percentage:percentages[city]}));
+  temporaryOrders = temporaryOrders.map(to => to.city).filter((value,index,self) => {return self.indexOf(value) == index}).map(city => ({city:city, percentage:percentages[city]}));
   temporaryOrders.sort((a,b)=>b.percentage-a.percentage);
   locationsDiv.innerHTML = "";
   locationsDiv.innerHTML = temporaryOrders.map(order=>`
@@ -132,62 +176,72 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   //Top Products: top products in terms of demand (pending orders) and acceptance (delivered orders)
-  let productOrders = orders; //temporary for products
-  productOrders.filter();
+  const productOrderCounts = computeProductOrders(orders);
+  
+  const totalProductCounts = productOrderCounts.total; 
+  const deliveredProductCounts = productOrderCounts.delivered;
 
+  const productPrices = computeProductPrices(orders);
+
+  let temporaryPO = orders;
+  temporaryPO = temporaryPO.map(order=>order.product).filter((value,index,self) => {return self.indexOf(value) == index}); 
+  temporaryPO = temporaryPO.map(product => ({product:product, productPrice:productPrices[product]}));
+  //sort by order (weak condition), sort by delivery/price (strong condition)
+  temporaryPO.sort((a,b)=> b.productPrice - a.productPrice); //we sort by price because we assume cases of products ordered frequently but rarely delivered to be rare (as order and deliver correlate) to avoid downplaying such products
+  
   const productsDiv = document.getElementById('productsDiv');
   productsDiv.innerHTML = "";
-  productsDiv.innerHTML = productOrders.map(product => `
+  productsDiv.innerHTML = temporaryPO.map((order,index) => `
     <div class="flex justify-between">
         <div>
-            <p class="font-medium">${product.name}</p>
-            <p class="text-gray-500">Ordered: 4 • Delivered: 4</p>
+            <p class="font-medium">${index+1}. ${order.product}</p>
+            <p class="text-gray-500">Ordered: ${totalProductCounts[order.product]} • Delivered: ${deliveredProductCounts[order.product]}</p>
         </div>
-        <span class="font-semibold">Total: MAD 40</span>
+        <span class="font-semibold">Total: MAD ${order.productPrice}</span>
     </div>
   `).slice(0,3).join(""); 
 
   
   const viewProducts = document.getElementById('viewProducts');
-  
+  viewProducts.addEventListener('click', e=>{
+    e.preventDefault();
+    if (viewProducts.textContent == "View All →"){
+          productsDiv.innerHTML = "";
+          productsDiv.innerHTML = temporaryPO.map(order => `
+            <div class="flex justify-between">
+                <div>
+                    <p class="font-medium">${order.product}</p>
+                    <p class="text-gray-500">Ordered: ${totalProductCounts[order.product]} • Delivered: ${deliveredProductCounts[order.product]}</p>
+                </div>
+                <span class="font-semibold">Total: MAD ${order.productPrice}</span>
+            </div>
+          `).join(""); //all 
+            viewProducts.textContent = "Show Top 3 →";
+    } else {
+      productsDiv.innerHTML = "";
+      productsDiv.innerHTML = temporaryPO.map(order => `
+        <div class="flex justify-between">
+            <div>
+                <p class="font-medium">${order.product}</p>
+                <p class="text-gray-500">Ordered: ${totalProductCounts[order.product]} • Delivered: ${deliveredProductCounts[order.product]}</p>
+            </div>
+            <span class="font-semibold">Total: MAD ${order.productPrice}</span>
+        </div>
+      `).slice(0,3).join(""); //top 3
+        viewProducts.textContent = "View All →"
+    }
+
+  })
 
 
   // Customers
-  const customers = {};
-  orders.forEach(o => { customers[o.phone] = (customers[o.phone] || 0) + 1; });
-  const newCustomers = Object.values(customers).filter(c => c===1).length;
-  const returningCustomers = Object.values(customers).filter(c => c>1).length;
-  const retentionRate = ((returningCustomers / (newCustomers + returningCustomers || 1)) * 100).toFixed(1);
-  const lifetimeValue = revenue / (Object.keys(customers).length || 1);
+  const newCustomers = document.getElementById('newCustomers');
+  const returningCustomers = document.getElementById('returningCustomers');
+  const retentionRate = document.getElementById('retentionRate');
+  const lifetimeValue = document.getElementById('lifetimeValue');
 
-//   document.querySelector("#newCustomers p:nth-child(2)").textContent = newCustomers;
-//   document.querySelector("#returningCustomers p:nth-child(2)").textContent = returningCustomers;
-//   document.querySelector("#retentionRate p:nth-child(2)").textContent = retentionRate + "%";
-//   document.querySelector("#lifetimeValue p:nth-child(2)").textContent = "MAD " + lifetimeValue.toFixed(2);
-
-//   // Top Products
-//   const productSales = {};
-//   deliveredOrders.forEach(o => productSales[o.product] = (productSales[o.product] || 0) + 1);
-//   const topProducts = Object.entries(productSales).sort((a,b)=>b[1]-a[1]).slice(0,3);
-//   const topProductsEl = document.getElementById("topProducts");
-//   topProductsEl.innerHTML = "";
-//   topProducts.forEach(([name,sales]) => {
-//     const div = document.createElement("div");
-//     div.className = "flex justify-between";
-//     div.innerHTML = `<div><p class="font-medium">${name}</p><p class="text-gray-500">Sales: ${sales}</p></div><span class="font-semibold">MAD 0</span>`;
-//     topProductsEl.appendChild(div);
-//   });
-
-//   // Top Customers
-//   const topCustomersEl = document.getElementById("topCustomers");
-//   topCustomersEl.innerHTML = "";
-//   Object.entries(customers).sort((a,b)=>b[1]-a[1]).slice(0,3).forEach(([phone,ordersCount])=>{
-//     const div = document.createElement("div");
-//     div.className = "flex items-center gap-4 mb-2";
-//     div.innerHTML = `<div class="flex-1"><p class="font-medium">${phone}</p><p class="text-sm text-gray-500">Orders: ${ordersCount}</p></div>`;
-//     topCustomersEl.appendChild(div);
-//   });
-
+  newCustomers.value = customers.filter(customer => customer.totalOrders == 0).length;
+  
 //   // Revenue / Expenses / Profit chart
 //   new Chart(document.getElementById("revenueChart"), {
 //     type: "line",

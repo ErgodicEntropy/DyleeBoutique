@@ -12,4 +12,5 @@ A small e-commerce project for my sister
 - Add more expenses attributes (data model)
 - Add more analytics or dashboard metrics for better financial-accounting accuracy (target: fine-grained accuracy) -> useful for simulation, prediction, extrapolation, hindcast, forecast and decision-making (provisioning)
 - Add more classes/entites for realistic data models
-- Might replace localStorage by indexedDB or actual backend database (PHP's mysqli): localStorage can work in production (remote hosting) too but the risks are if the user clears the cookies by mistake or use another browser or machine, expiration, insecurity, etc.
+- Might replace localStorage by indexedDB or actual backend database (PHP's mysqli): localStorage can work in production (remote hosting) too but the risks are if the user clears the cookies by mistake or use another browser or machine, expiration, insecurity, limited storage, etc.
+- Choose a secure, robust, reliable and scalable hosting plan (local vs remote: which remote if remote)

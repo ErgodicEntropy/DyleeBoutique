@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products</title>
+<script type="module" src="/static/add_product.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+<div class="flex min-h-screen">
+
+<aside class="w-64 bg-white shadow-lg">
+<div class="p-6 text-xl font-bold border-b">DyleeBoutique</div>
+
+<nav class="p-4 space-y-2">
+
+<a href="dashboard.html" class="block p-2 rounded hover:bg-gray-100">Home</a>
+<a href="products.html" class="block p-2 rounded hover:bg-gray-100">Products</a>
+<a href="orders.html" class="block p-2 rounded hover:bg-gray-100">Orders</a>
+<a href="customers.html" class="block p-2 rounded hover:bg-gray-100">Customers</a>
+<a href="expenses.html" class="block p-2 rounded hover:bg-gray-100">Expenses</a>
+
+</nav>
+</aside>
+
+<main class="flex-1 p-8 space-y-8">
+
+<h1 class="text-2xl font-bold mb-6">Add Product</h1>
+
+<div class="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Manual Entry</h2>
+
+    <form id="productForm" class="grid gap-4 md:grid-cols-2">
+        <div class="space-y-4">
+        <label class="block text-sm font-medium" required>Product Name</label>
+        <input id="name" type="text" class="w-full border rounded p-2">
+        </div> 
+
+        <div class="space-y-4">
+        <label class="block text-sm font-medium">Size</label>
+        <input id="size" type="text" class="w-full border rounded p-2">
+        </div> 
+
+        <div>
+        <label class="block text-sm font-medium">Category</label>
+        <input id="category" type="text" class="w-full border rounded p-2">
+        </div>
+
+        <div>
+        <label class="block text-sm font-medium">Brand</label>
+        <input id="brand" type="text" class="w-full border rounded p-2">
+        </div>
+
+        <div>
+        <label class="block text-sm font-medium" required>Cost</label>
+        <input id="cost" type="number" placeholder="DH" class="w-full border rounded p-2">
+        </div>
+
+        <div>
+        <label class="block text-sm font-medium">Estimated Price</label>
+        <input id="price" type="number" class="w-full border rounded p-2">
+        </div>
+
+        <div>
+        <label class="block text-sm font-medium">Stock</label>
+        <input id="stock" type="number" class="w-full border rounded p-2">
+        </div>
+
+        <div>
+        <label class="block text-sm font-medium">Image</label>
+        <input id="image" type="file" accept="image/*" class="w-full">
+        </div>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Save Product
+        </button>
+
+    </form>
+
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Upload Product File</h2>
+    <form id="uploadForm" action="/upload_order" method="POST" class="space-y-4">
+
+    <p class="text-gray-700">Upload a JSON file of your product.</p>
+
+    <div>
+    <input type="file" accept=".json" class="w-full border rounded p-2">
+    </div>
+
+    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+    Upload Product
+    </button>
+
+</form>
+</div>
+
+</main>
+
+</div>
+</body>
+</html>

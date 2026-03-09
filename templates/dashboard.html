@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics</title>
+<script src="/static/dashboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow">
+    <div class="p-6 text-xl font-bold border-b">DyleeBoutique</div>
+    <nav class="p-4 space-y-2">
+      <a href="dashboard.html" class="block p-2 rounded bg-gray-100 font-semibold">Home</a>
+      <a href="products.html" class="block p-2 rounded hover:bg-gray-100">Products</a>
+      <a href="orders.html" class="block p-2 rounded hover:bg-gray-100">Orders</a>
+      <a href="customers.html" class="block p-2 rounded hover:bg-gray-100">Customers</a>
+      <a href="expenses.html" class="block p-2 rounded hover:bg-gray-100">Expenses</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-y-auto">
+
+    <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+
+    <!-- Metrics Grid -->
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-5 mb-6">
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">INCOME</p>
+        <div class="flex justify-between items-center">
+          <h2 id="income" class="text-2xl font-bold"></h2>
+          <span id="incomeChange" class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p class="text-xs text-gray-400">vs previous period</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">EXPENSES</p>
+        <div class="flex justify-between items-center">
+          <h2 id="expenses" class="text-2xl font-bold"></h2>
+          <span id="expensesChange" class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p class="text-xs text-gray-400">vs previous period</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">PROFIT</p>
+        <div class="flex justify-between items-center">
+          <h2 id="profit" class="text-2xl font-bold text-green-600"></h2>
+          <span id="profitChange" class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p class="text-xs text-gray-400">vs previous period</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">ORDERS</p>
+        <div class="flex justify-between items-center">
+          <h2 id="totalOrders" class="text-2xl font-bold"></h2>
+          <span id="totalOrdersChange" class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p class="text-xs text-gray-400">Total Base</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">DELIVERED</p>
+        <div class="flex justify-between items-center">
+          <h2 id="delivered" class="text-2xl font-bold"></h2>
+          <span class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p id="deliveredRate" class="text-xs text-gray-400">Rate <span class="text-green-600">0.1%</span></p>
+      </div>
+
+    </div>
+
+    <!-- Second Metrics Row -->
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-5 mb-6">
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">PENDING</p>
+        <div class="flex justify-between items-center">
+          <h2 id="pending" class="text-2xl font-bold"></h2>
+          <span class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p id="pendingRate" class="text-xs text-gray-400"></p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">CANCELED</p>
+        <div class="flex justify-between items-center">
+          <h2 id="canceled" class="text-2xl font-bold"></h2>
+          <span class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 0%</span>
+        </div>
+        <p id="canceledRate" class="text-xs text-gray-400"></p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl shadow-sm border">
+        <p class="text-sm text-gray-500">SUCCESS RATE</p>
+        <div class="flex justify-between items-center">
+          <h2 id="successRate" class="text-2xl font-bold"></h2>
+          <span class="text-green-600 text-xs font-semibold bg-green-100 px-2 py-1 rounded">↑ 100%</span>
+        </div>
+        <p class="text-xs text-gray-400">Overall Performance</p>
+      </div>
+
+    </div>
+
+    <!-- Top Locations -->
+    <div class="bg-white border rounded-xl shadow-sm p-6 mb-6 hover:shadow-md transition">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-semibold text-gray-800">Top Locations</h3>
+        <button id="viewLocations" class="text-sm text-teal-600 hover:underline">View All →</button>
+      </div>
+      <div id="locationsDiv" class="space-y-4">
+      </div>
+    </div>
+
+    <!-- Customer & Marketing Metrics -->
+    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-semibold mb-4">Customer Metrics</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="border rounded-lg p-4">
+            <p class="text-sm text-gray-500">New Customers</p>
+            <p class="text-xl font-bold">14937</p>
+          </div>
+          <div class="border rounded-lg p-4">
+            <p class="text-sm text-gray-500">Returning</p>
+            <p class="text-xl font-bold">0</p>
+          </div>
+          <div class="border rounded-lg p-4">
+            <p class="text-sm text-gray-500">Retention Rate</p>
+            <p class="text-xl font-bold">0.0%</p>
+          </div>
+          <div class="border rounded-lg p-4">
+            <p class="text-sm text-gray-500">Lifetime Value</p>
+            <p class="text-xl font-bold">MAD 0.3</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-semibold mb-4">Top 3 Customers</h3>
+        <div class="flex items-center gap-4 mb-4">
+          <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
+          <div>
+            <p class="font-medium">Abdelwahed</p>
+            <p class="text-sm text-gray-500">Agent</p>
+          </div>
+          <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded">Offline</span>
+        </div>
+        <div class="text-sm space-y-1 text-gray-600">
+          <p class="flex justify-between"><span>WhatsApp Conversions</span><span class="font-semibold">66</span></p>
+          <p class="flex justify-between"><span>Orders</span><span class="font-semibold">3</span></p>
+          <p class="flex justify-between"><span>Confirmation Rate</span><span class="font-semibold text-green-500">13.6%</span></p>
+          <p class="flex justify-between"><span>Delivery Rate</span><span class="font-semibold text-green-500">4.5%</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Members, Top Products, Shipping -->
+    <div class="grid lg:grid-cols-3 gap-6 mb-6">
+      </div>
+
+      <!-- Top Products -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <div class="flex justify-between mb-4">
+          <h3 class="font-semibold">Top Products</h3>
+        <button id="viewProducts" class="text-sm text-teal-600 hover:underline">View All →</button>
+        </div>
+        <div id="productsDiv" class="space-y-4 text-sm">
+          <div class="flex justify-between">
+            <div>
+              <p class="font-medium">Gift Card</p>
+              <p class="text-gray-500">Sales: 3 • Deliver: 3</p>
+            </div>
+            <span class="font-semibold">Total: MAD 30</span>
+          </div>
+          <div class="flex justify-between">
+            <div>
+              <p class="font-medium">Multi-managed Snowboard</p>
+              <p class="text-gray-500">Sales: 3 • Deliver: 3</p>
+            </div>
+            <span class="font-semibold">MAD 1889.9</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-semibold mb-4">Revenue</h3>
+        <canvas id="revenueChart"></canvas>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-semibold mb-4">Orders</h3>
+        <canvas id="ordersChart"></canvas>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const revenueChart = new Chart(
+document.getElementById("revenueChart"), {
+  type: 'line',
+  data: {
+    labels:['Jan','Feb','Mar','Apr','May','Jun'],
+    datasets:[{
+      label:'Revenue',
+      data:[1200,1900,3000,2500,3200,4700],
+      borderColor:'#14b8a6',
+      backgroundColor:'rgba(20,184,166,0.2)',
+      tension:0.4
+    }]
+  },
+  options:{responsive:true}
+})
+
+const ordersChart = new Chart(
+document.getElementById("ordersChart"), {
+  type: 'bar',
+  data: {
+    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets:[{
+      label:'Orders',
+      data:[12,19,8,15,22,30,17],
+      backgroundColor:'#0ea5e9'
+    }]
+  }
+})
+</script>
+
+</body>
+</html>

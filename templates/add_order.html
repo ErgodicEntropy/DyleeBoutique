@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Order</title>
+<script src="/static/add_order.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+<div class="flex min-h-screen">
+
+  <aside class="w-64 bg-white shadow-lg">
+    <div class="p-6 text-xl font-bold border-b">DyleeBoutique</div>
+    <nav class="p-4 space-y-2">
+      <a href="dashboard.html" class="block p-2 rounded hover:bg-gray-100">Home</a>
+      <a href="products.html" class="block p-2 rounded hover:bg-gray-100">Products</a>
+      <a href="orders.html" class="block p-2 rounded hover:bg-gray-100">Orders</a>
+      <a href="customers.html" class="block p-2 rounded hover:bg-gray-100">Customers</a>
+      <a href="expenses.html" class="block p-2 rounded hover:bg-gray-100">Expenses</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 p-8 space-y-8">
+
+    <h1 class="text-2xl font-bold mb-6">Add Order</h1>
+
+    <div class="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Manual Entry</h2>
+      <form id="manualForm" class="grid gap-4 md:grid-cols-2">
+
+        <div id="orderInputs" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Customer</label>
+            <input id="customer" type="text" class="w-full border rounded p-2" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input id="phone" type="tel" class="w-full border rounded p-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700" required>Price</label>
+            <input id="price" type="text" class="w-full border rounded p-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">City</label>
+            <input id="city" type="text" class="w-full border rounded p-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Address</label>
+            <input id="address" type="text" class="w-full border rounded p-2">
+        </div>
+        </div>
+
+        <div class="flex items-end">
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded">
+            Save Order
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Upload Delivery Document</h2>
+      <form id="uploadForm" action="/upload_order" method="POST" class="space-y-4">
+
+        <p class="text-gray-700">Upload a JSON file containing your orders.</p>
+
+        <div>
+          <input type="file" class="w-full border rounded p-2">
+        </div>
+
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+          Upload Orders
+        </button>
+
+      </form>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

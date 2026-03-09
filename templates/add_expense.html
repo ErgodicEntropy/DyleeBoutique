@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Expense</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/static/add_expense.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+<aside class="w-64 bg-white shadow">
+<div class="p-6 text-xl font-bold border-b">DyleeBoutique</div>
+
+<nav class="p-4 space-y-2">
+<a href="dashboard.html" class="block p-2 rounded hover:bg-gray-100">Home</a>
+<a href="products.html" class="block p-2 rounded hover:bg-gray-100">Products</a>
+<a href="orders.html" class="block p-2 rounded hover:bg-gray-100">Orders</a>
+<a href="customers.html" class="block p-2 rounded hover:bg-gray-100">Customers</a>
+<a href="expenses.html" class="block p-2 rounded bg-gray-100 font-semibold">Expenses</a>
+</nav>
+</aside>
+
+<main class="flex-1 p-8">
+
+<h1 class="text-2xl font-bold mb-6">Add Expense</h1>
+
+<div class="bg-white p-6 rounded-xl shadow max-w-lg">
+
+<form class="space-y-4">
+
+<input placeholder="Expense name" class="w-full border p-2 rounded">
+
+<input placeholder="Amount (DH)" type="number" class="w-full border p-2 rounded">
+
+<select class="w-full border p-2 rounded">
+<option>Shipping</option>
+<option>Ads</option>
+<option>Supplies</option>
+</select>
+
+<button class="bg-red-500 text-white px-4 py-2 rounded">
+Add Expense
+</button>
+
+</form>
+
+</div>
+
+</main>
+
+</div>
+</body>
+</html>

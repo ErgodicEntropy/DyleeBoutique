@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DyleeBoutique - Products</title>
+
+<script type="module" src="/static/products.js"></script>
+<script type="module" src="/static/export.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+
+<!-- Sidebar -->
+
+<aside class="w-64 bg-white shadow">
+
+<div class="p-6 text-xl font-bold border-b">
+DyleeBoutique
+</div>
+
+<nav class="p-4 space-y-2">
+
+<a href="dashboard.html" class="block p-2 rounded hover:bg-gray-100">Home</a>
+
+<a href="products.html" class="block p-2 rounded bg-gray-100 font-semibold">
+Products
+</a>
+
+<a href="orders.html" class="block p-2 rounded hover:bg-gray-100">Orders</a>
+
+<a href="customers.html" class="block p-2 rounded hover:bg-gray-100">Customers</a>
+
+<a href="expenses.html" class="block p-2 rounded hover:bg-gray-100">Expenses</a>
+
+
+</nav>
+
+</aside>
+
+
+
+<!-- Main -->
+
+<main class="flex-1 p-8">
+
+<h1 class="text-3xl font-bold mb-6">
+My Products
+</h1>
+
+
+
+<!-- Toolbar -->
+
+<div class="flex flex-wrap gap-3 mb-6 items-center justify-between">
+
+<div class="flex gap-2">
+
+<button id="tableBtn"
+class="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+
+Table
+
+</button>
+
+
+<button id="cardBtn"
+class="text-white bg-gradient-to-r from-purple-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+
+Cards
+
+</button>
+
+</div>
+
+
+<div class="flex gap-2">
+
+<a href="./add_product.html"
+class="text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+
++ Add Product
+
+</a>
+
+<button id="downloadBtn"
+class="text-white bg-gradient-to-r from-blue-400 to-blue-600 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5">
+
+Download JSON
+
+</button>
+
+<button id="exportBtn"
+class="text-white bg-gradient-to-r from-green-400 to-green-600 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5">
+
+Export CSV
+
+</button>
+
+<button id="exportProducts"
+class="text-white bg-gradient-to-r from-green-400 to-green-600 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5">
+
+Export PDF
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<!-- TABLE VIEW -->
+
+<div id="tableDiv" class="hidden">
+
+<div class="bg-white rounded-xl shadow overflow-hidden">
+
+<table class="w-full text-left">
+
+<thead id="columns" class="bg-gray-50 hidden">
+
+<tr>
+
+<th class="p-4">Name</th>
+<th class="p-4">Size</th>
+<th class="p-4">Category</th>
+<th class="p-4">Brand</th>
+<th class="p-4">Cost</th>
+<th class="p-4">Estimated Price (Min)</th>
+<th class="p-4">Market Price (Max)</th>
+<th class="p-4">Stock</th>
+<th class="p-4">Image</th>
+<th class="p-4">Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="productBody">
+
+<!-- Products injected by JS -->
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+<!-- CARD VIEW -->
+
+<div id="cardDiv" class="hidden">
+
+<div id="cardContainer"
+class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+<!-- Cards injected by JS -->
+
+</div>
+
+</div>
+
+
+
+</main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders</title>
+
+<script type="module" src="/static/orders.js"></script>
+<script type="module" src="/static/export.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+<div class="flex min-h-screen">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-white shadow-lg">
+
+<div class="p-6 text-xl font-bold border-b">
+DyleeBoutique
+</div>
+
+<nav class="p-4 space-y-2">
+
+<a href="dashboard.html" class="block p-2 rounded hover:bg-gray-100">Home</a>
+<a href="products.html" class="block p-2 rounded hover:bg-gray-100">Products</a>
+<a href="orders.html" class="block p-2 rounded bg-gray-100 font-semibold">Orders</a>
+<a href="customers.html" class="block p-2 rounded hover:bg-gray-100">Customers</a>
+<a href="expenses.html" class="block p-2 rounded hover:bg-gray-100">Expenses</a>
+
+</nav>
+</aside>
+
+<main class="flex-1 p-8 space-y-8">
+
+<h1 class="text-3xl font-bold mb-6">My Orders</h1>
+
+<!-- CONTROL BAR -->
+
+<div class="flex flex-wrap items-center justify-between gap-4">
+
+<div class="flex gap-2">
+
+<button id="tableBtn"
+class="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+Table
+</button>
+
+<button id="cardBtn"
+class="text-white bg-gradient-to-r from-purple-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+Cards
+</button>
+
+</div>
+
+<div class="flex gap-2">
+
+<a href="add_order.html"
+class="text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
++ Add Order
+</a>
+
+
+<button id="downloadBtn"
+class="text-white bg-gradient-to-r from-blue-400 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+Download JSON
+</button>
+
+<button id="exportBtn"
+class="text-white bg-gradient-to-r from-green-400 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+Export CSV
+</button>
+
+<button id="exportOrders"
+class="text-white bg-gradient-to-r from-green-400 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
+Export PDF
+</button>
+
+</div>
+
+</div>
+
+<!-- TABLE VIEW -->
+
+<div id="tableDiv" class="bg-white rounded-xl shadow-lg overflow-hidden">
+
+<table class="w-full text-left">
+
+<thead class="bg-gray-50 text-gray-600 text-sm uppercase">
+<tr>
+<th class="p-4">ID</th>
+<th class="p-4">Customer</th>
+<th class="p-4">Phone</th>
+<th class="p-4">Date</th>
+<th class="p-4">Product</th>
+<th class="p-4">Quantity</th>
+<th class="p-4">Price</th>
+<th class="p-4">City</th>
+<th class="p-4">Address</th>
+<th class="p-4">Status</th>
+<th class="p-4">Action</th>
+</tr>
+</thead>
+
+<tbody id="orderBody" class="text-gray-700 divide-y">
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- CARD VIEW -->
+
+<div id="cardDiv"
+class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

@@ -9,7 +9,7 @@ if (products && expenseId < products.length){
         const expense = {
             id:expenseId, 
             name:product.name || "", 
-            amount:(product.cost || 0)*(product.stock || 0), 
+            amount:Number(product.cost || 0)*Number(product.initialQuantity || 0), 
             category: "Product Purchase"
         }
         expenses.push(expense);

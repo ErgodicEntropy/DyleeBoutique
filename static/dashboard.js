@@ -74,10 +74,15 @@ function computeProductPrices(orders){
   return productPrices;
 
 }
+
+
+const finance = document.getElementById('financialChart');
+const orderChart = document.getElementById("ordersChart");
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const orders = JSON.parse(localStorage.getItem("orders")) || [];
-  const products = JSON.parse(localStorage.getItem("products")) || [];
+  // const products = JSON.parse(localStorage.getItem("products")) || [];
   const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
   const customers = JSON.parse(localStorage.getItem("customers")) || [];
 
@@ -121,10 +126,10 @@ document.addEventListener("DOMContentLoaded", () => {
   temporaryOrders = temporaryOrders.map(to => to.city).filter((value,index,self) => {return self.indexOf(value) == index}).map(city => ({city:city, percentage:percentages[city]}));
   temporaryOrders.sort((a,b)=>b.percentage-a.percentage);
   locationsDiv.innerHTML = "";
-  locationsDiv.innerHTML = temporaryOrders.map(order=>`
+  locationsDiv.innerHTML = temporaryOrders.map((order, index)=>`
         <div class="flex items-center justify-between">
           <div>
-            <p class="font-medium text-gray-800">${order.city}</p>
+            <p class="font-medium text-gray-800">${index+1}. ${order.city}</p>
             <p class="text-xs text-gray-400">Morocco</p>
           </div>
           <div class="flex items-center gap-4">
@@ -140,10 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     if (viewBtn.textContent == "View All →"){
         locationsDiv.innerHTML = "";
-        locationsDiv.innerHTML = temporaryOrders.map(order=>`
+        locationsDiv.innerHTML = temporaryOrders.map((order, index)=>`
             <div class="flex items-center justify-between">
                 <div>
-                <p class="font-medium text-gray-800">${order.city}</p>
+                <p class="font-medium text-gray-800">${index+1}. ${order.city}</p>
                 <p class="text-xs text-gray-400">Morocco</p>
                 </div>
                 <div class="flex items-center gap-4">
@@ -156,10 +161,10 @@ document.addEventListener("DOMContentLoaded", () => {
             viewBtn.textContent = "Show Top 3 →";
     } else {
         locationsDiv.innerHTML = "";
-        locationsDiv.innerHTML = temporaryOrders.map(order=>`
+        locationsDiv.innerHTML = temporaryOrders.map((order, index)=>`
             <div class="flex items-center justify-between">
                 <div>
-                <p class="font-medium text-gray-800">${order.city}</p>
+                <p class="font-medium text-gray-800">${index+1}. ${order.city}</p>
                 <p class="text-xs text-gray-400">Morocco</p>
                 </div>
                 <div class="flex items-center gap-4">
@@ -191,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const productsDiv = document.getElementById('productsDiv');
   productsDiv.innerHTML = "";
-  productsDiv.innerHTML = temporaryPO.map((order,index) => `
+  productsDiv.innerHTML = temporaryPO.map((order, index) => `
     <div class="flex justify-between">
         <div>
             <p class="font-medium">${index+1}. ${order.product}</p>
@@ -207,10 +212,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     if (viewProducts.textContent == "View All →"){
           productsDiv.innerHTML = "";
-          productsDiv.innerHTML = temporaryPO.map(order => `
+          productsDiv.innerHTML = temporaryPO.map((order, index)=> `
             <div class="flex justify-between">
                 <div>
-                    <p class="font-medium">${order.product}</p>
+                    <p class="font-medium">${index+1}. ${order.product}</p>
                     <p class="text-gray-500">Ordered: ${totalProductCounts[order.product]} • Delivered: ${deliveredProductCounts[order.product]}</p>
                 </div>
                 <span class="font-semibold">Total: MAD ${order.productPrice}</span>
@@ -219,10 +224,10 @@ document.addEventListener("DOMContentLoaded", () => {
             viewProducts.textContent = "Show Top 3 →";
     } else {
       productsDiv.innerHTML = "";
-      productsDiv.innerHTML = temporaryPO.map(order => `
+      productsDiv.innerHTML = temporaryPO.map((order, index) => `
         <div class="flex justify-between">
             <div>
-                <p class="font-medium">${order.product}</p>
+                <p class="font-medium">${index+1}. ${order.product}</p>
                 <p class="text-gray-500">Ordered: ${totalProductCounts[order.product]} • Delivered: ${deliveredProductCounts[order.product]}</p>
             </div>
             <span class="font-semibold">Total: MAD ${order.productPrice}</span>
@@ -233,37 +238,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
   })
 
-
   // Customers
   const newCustomers = document.getElementById('newCustomers');
   const returningCustomers = document.getElementById('returningCustomers');
   const retentionRate = document.getElementById('retentionRate');
   const lifetimeValue = document.getElementById('lifetimeValue');
 
-  newCustomers.value = customers.filter(customer => customer.totalOrders == 0).length;
-  
-//   // Revenue / Expenses / Profit chart
-//   new Chart(document.getElementById("revenueChart"), {
-//     type: "line",
-//     data: {
-//       labels: ["Jan","Feb","Mar","Apr","May","Jun"],
-//       datasets: [
-//         { label:"Revenue", data:[revenue], borderColor:"#14b8a6", backgroundColor:"rgba(20,184,166,0.2)", tension:0.4 },
-//         { label:"Expenses", data:[expensesTotal], borderColor:"#f87171", backgroundColor:"rgba(248,113,113,0.2)", tension:0.4 },
-//         { label:"Profit", data:[profit], borderColor:"#60a5fa", backgroundColor:"rgba(96,165,250,0.2)", tension:0.4 }
-//       ]
-//     },
-//     options:{ responsive:true, plugins:{ legend:{ position:"top" } } }
-//   });
+  const NC = customers.filter(customer => customer.status == "new").length;
+  console.log(NC);
+  newCustomers.value = NC;
 
-//   // Orders by weekday
-//   const ordersByDay = {Mon:0,Tue:0,Wed:0,Thu:0,Fri:0,Sat:0,Sun:0};
-//   const dayMap = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-//   orders.forEach(o => ordersByDay[dayMap[new Date(o.date).getDay()]]++);
-//   new Chart(document.getElementById("ordersChart"), {
-//     type: "bar",
-//     data: { labels:Object.keys(ordersByDay), datasets:[{ label:"Orders", data:Object.values(ordersByDay), backgroundColor:"#0ea5e9" }] },
-//     options:{ responsive:true }
-//   });
+  const RC = customers.filter(customer => customer.status == "returned").length; 
+  console.log(RC);
+  returningCustomers.value = RC;
+
+  const RR = (returningCustomers.value/customers.length)*100;
+  console.log(RR);
+  retentionRate.value = RR;
+
+  const LTV = customers.map(customer => customer.spent).reduce((sum,a)=>sum+a,0);
+  console.log(LTV);
+  lifetimeValue.value = LTV;
+
+
+  // Revenue / Expenses / Profit chart
+  // const financialChart = new Chart(finance, {
+  //   type: 'line',
+  //   data: {
+  //     labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], //or ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
+  //     dataset: [
+  //       {
+  //         label: "Revenue",
+  //         data: [revenue],
+  //         borderColor: "#14b8a6",
+  //         backgroundColor:"rgba(20,184,166,0.2)",
+  //         tension:0.5,
+  //         fill: false
+  //       },
+  //       {
+  //         label: "Expense",
+  //         data: [expensesTotal],
+  //         borderColor:"#f87171",
+  //         backgroundColor:"rgba(248,113,113,0.2)",
+  //         tension:0.5,
+  //         fill: false
+  //       },
+  //       {
+  //         label: "Profit",
+  //         data: [profit],
+  //         borderColor:"#60a5fa",
+  //         backgroundColor:"rgba(96,165,250,0.2)",
+  //         tension:0.5,
+  //         fill:false
+  //       }
+  //     ]
+  //   },
+  //   options:{ responsive:true, plugins:{ legend:{ position:"top" } } }
+
+  // })
+
+  // // Orders by weekday
+  // const ordersByDay = {Mon:0,Tue:0,Wed:0,Thu:0,Fri:0,Sat:0,Sun:0};
+  // const dayMap = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  // orders.forEach(o => ordersByDay[dayMap[new Date(o.date).getDay()]]++);
+  // const ordersChart = new Chart(orderChart, {
+  //   type: 'bar',
+  //   data: {
+  //     labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+  //     datasets:[{
+  //       label:'Orders',
+  //       data: Object.values(ordersByDay),
+  //       borderColor: "#14b8a6",
+  //       backgroundColor:'#0ea5e9'
+  //     }]
+  //   },
+  //   options:{ responsive:true }
+  // })
+
+
 
 });

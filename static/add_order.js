@@ -69,6 +69,9 @@ let quantity;
 
 product.addEventListener('change', e=>{
   e.preventDefault();
+  // if (quantityInput.innerHTML){
+  //   orderInput.removeChild(quantityInput);
+  // }
 
   const limit = findOrderProduct(product.value.trim()).stock;
 
@@ -91,7 +94,7 @@ product.addEventListener('change', e=>{
                text-gray-700 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200
                focus:outline-none transition" required>
   
-        <option value=""disabled selected>Select Quantity</option>
+        <option value="" disabled selected>Select Quantity</option>
         ${arr.map(index=> `
           <option value="${index}">${index}</option>
         `).join("")}

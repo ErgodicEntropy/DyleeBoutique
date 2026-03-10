@@ -6,6 +6,8 @@ let customerCounter = JSON.parse(localStorage.getItem("customerCounter")) || 0;
 // Group orders by customer
 let customersMap = {};
 
+const container = document.getElementById("customersContainer");
+
 //you can add order product taken by the customer and quantities of each, and other social media links
 orders.forEach(order => {
   const key = order.cid; //customer Id
@@ -62,7 +64,6 @@ customersArray = customersArray.map((customer, index) => {
 });
 
 // Render customer cards
-const container = document.getElementById("customersContainer");
 container.innerHTML = customersArray.map(c => `
   <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
     <div class="flex justify-between items-center mb-3">

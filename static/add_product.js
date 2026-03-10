@@ -11,6 +11,8 @@ async function readImage(imageFile){
   })    
 }
 
+
+
 const name = document.getElementById('name'); //required (name includes version)
 const size = document.getElementById('size') || "";
 const category = document.getElementById('category') || ""; 
@@ -48,7 +50,8 @@ productForm.addEventListener('submit', async (e) => {
       cost: cost.value.trim(),
       price: price.value.trim(),
       stock: stock.value.trim(),
-      image: image
+      image: image,
+      initialQuantity: stock.value.trim() //used to count expenses only
     };
 
     if (!data){

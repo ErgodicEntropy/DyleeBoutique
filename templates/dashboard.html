@@ -195,11 +195,10 @@
       </div>
     </div>
 
-    <!-- Charts -->
     <div class="grid lg:grid-cols-2 gap-6">
       <div class="bg-white p-6 rounded-xl shadow">
-        <h3 class="font-semibold mb-4">Revenue</h3>
-        <canvas id="revenueChart"></canvas>
+        <h3 class="font-semibold mb-4">Revenue - Expenses - Profit</h3>
+        <canvas id="financialChart"></canvas>
       </div>
       <div class="bg-white p-6 rounded-xl shadow">
         <h3 class="font-semibold mb-4">Orders</h3>
@@ -209,37 +208,6 @@
 
   </main>
 </div>
-
-<script>
-const revenueChart = new Chart(
-document.getElementById("revenueChart"), {
-  type: 'line',
-  data: {
-    labels:['Jan','Feb','Mar','Apr','May','Jun'],
-    datasets:[{
-      label:'Revenue',
-      data:[1200,1900,3000,2500,3200,4700],
-      borderColor:'#14b8a6',
-      backgroundColor:'rgba(20,184,166,0.2)',
-      tension:0.4
-    }]
-  },
-  options:{responsive:true}
-})
-
-const ordersChart = new Chart(
-document.getElementById("ordersChart"), {
-  type: 'bar',
-  data: {
-    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-    datasets:[{
-      label:'Orders',
-      data:[12,19,8,15,22,30,17],
-      backgroundColor:'#0ea5e9'
-    }]
-  }
-})
-</script>
 
 </body>
 </html>

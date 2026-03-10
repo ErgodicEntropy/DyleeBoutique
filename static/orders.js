@@ -72,6 +72,8 @@ function renderTable() {
 
     const toggleText = order.status === "Confirmed" ? "Unconfirm" : "Confirm";
 
+    const toggleConfirm = order.status === "Canceled" ? "Uncancel": "Cancel";
+
     orderBody.insertAdjacentHTML(
       "beforeend",
       `
@@ -112,9 +114,10 @@ function renderTable() {
           </button>
 
           <button data-id="${order.id}"
-            class="cancelBtn text-white bg-gradient-to-r from-red-400 to-red-600 hover:bg-gradient-to-br focus:ring-2 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 transition">
-            Cancel
+            class="cancelBtn text-white ${order.status === "Canceled" ? "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:bg-gradient-to-br focus:ring-2 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5":"bg-gradient-to-r from-red-400 to-red-600 hover:bg-gradient-to-br focus:ring-2 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5"} transition">
+            ${toggleConfirm}
           </button>
+
 
         </td>
       </tr>
@@ -145,6 +148,8 @@ function renderCards() {
 
     const toggleText = order.status === "Confirmed" ? "Unconfirm" : "Confirm";
 
+    const toggleConfirm = order.status === "Canceled" ? "Uncancel": "Cancel";
+
     cardDiv.insertAdjacentHTML(
       "beforeend",
       `
@@ -165,7 +170,7 @@ function renderCards() {
           } transition">${toggleText}</button>
           <button data-id="${order.id}" class="editBtn text-sm font-medium text-blue-600 hover:text-blue-800 transition">Edit</button>
           <button data-id="${order.id}" class="deleteBtn text-sm font-medium text-orange-600 hover:text-red-800 transition">Delete</button>
-          <button data-id="${order.id}" class="cancelBtn text-sm font-medium text-red-600 hover:text-red-800 transition">Cancel</button>
+          <button data-id="${order.id}" class="cancelBtn text-sm font-medium ${order.status === "Canceled" ? "text-yellow-600 hover:text-yellow-800":"text-red-600 hover:text-red-800"} transition">${toggleConfirm}</button>
           </div>
       </div>
     `
@@ -196,9 +201,11 @@ document.addEventListener("click", e => {
   }
 
   if (e.target.classList.contains("cancelBtn")) {
-    if (orders[index].status != "Canceled"){
-      orders[index].status = "Canceled";
-    }
+    // Toggle status
+    orders[index].status =
+      orders[index].status === "Canceled" ? "Pending" : "Canceled";
+
+    console.log(orders[index].status);
     const productName = orders[index].product;
     const product = findOrderProduct(productName);
     if (product){
@@ -245,6 +252,9 @@ document.addEventListener("click", e => {
       renderTable();
       renderCards();
     });
+    //edge case: if the user edits an order so that it has the same customer (full name) and phone (number) as (accidentally) pre-existing order with the same pair values
+    //in this case, this is subject to interpretation of the user intention: we can keep customers separate on My Customers, but we can also merge them. In case we merge them, here is how: 
+    
   }
 });
 

@@ -6,8 +6,7 @@ A small e-commerce project for my sister
 - Orders PDF-JSON File problem
 - Order many different products at once -> association class (quantity attribute) to capture N-N group by => create junction table or relation (or bi-allocate foreign keys)
 - Fix Product ID system: decouple products of the same name into product.stock many products with the same name
-- Fix cancel order toggle textcontent
-- Fix edit order merge customers with same values
+- Fix edit order merge customers with same values (optional)
 - Add more products attributes (data model)
 - Add more orders attributes (data model)
 - Add more customer attributes (data model)

@@ -69,20 +69,21 @@ let quantity;
 
 product.addEventListener('change', e=>{
   e.preventDefault();
-  // if (quantityInput.innerHTML){
-  //   orderInput.removeChild(quantityInput);
-  // }
 
+  const quantityDiv = document.getElementById('quantityDiv'); 
+  if (quantityDiv){
+    quantityDiv.remove();
+  }
   const limit = findOrderProduct(product.value.trim()).stock;
 
-  let arr = []; 
+  let arr =[];
   for (let k = 1; k <= limit; k++){
     arr.push(k);
   }
 
   const quantityInput = document.createElement('div');
   quantityInput.innerHTML = `
-  <div class="w-full max-w-sm">
+  <div id="quantityDiv" class="w-full max-w-sm">
     <label class="block text-sm font-medium text-gray-700 mb-2">
       Quantity
     </label>

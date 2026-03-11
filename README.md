@@ -5,9 +5,9 @@ A small e-commerce project for my sister
 - Complete Dashboard
 - Orders PDF-JSON File problem
 - Order many different products at once -> association class (quantity attribute) to capture N-N group by => create junction table or relation (or bi-allocate foreign keys) -> no need for a junction table or forein keys bi-allocation because we used compounded data values, forbidden in databases, in the table to avoid reference overhead
-    - If the user add the same product to the order -> add up the numbers in the item span instead of creating a new item span
-    - add cancel button -> stock increments back to its original value
-    - If only one stock unit of a product remains, no need to ask about quantity
+    - If the user add the same product to the order -> add up the numbers in the item span instead of creating a new item span (Done)
+    - add cancel button -> stock increments back to its original value (Done)
+    - If only one stock unit of a product remains, no need to ask about quantity (optional)
 - Fix Product ID system: decouple products of the same name into product.stock many products with the same name (optional)
 - Fix edit order merge customers with same values (optional)
 - Add more products attributes (data model): version

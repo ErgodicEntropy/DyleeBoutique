@@ -174,60 +174,7 @@ const productChangeEvent = e =>{
 
 product.addEventListener('change', productChangeEvent);
 
-// product.addEventListener('change', e=>{
-//   e.preventDefault();
-  
-//   limit = findOrderProduct(product.value.trim()).stock;
-  
-//   for (let k = 1; k <= limit; k++){
-//     arr.push(k);
-//   }
-
-//   const initialQuantityDiv = document.createElement('div');
-//   initialQuantityDiv.id = "quantityDiv"; 
-//   initialQuantityDiv.innerHTML = `
-//   <div class="w-full max-w-sm">
-//     <label class="block text-sm font-medium text-gray-700 mb-2">
-//       Quantity
-//     </label>
-  
-//     <div class="relative">
-//       <select
-//         id="productQuantity"
-//         class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm
-//                text-gray-700 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200
-//                focus:outline-none transition" required>
-  
-//         <option value="" disabled selected>Select Quantity</option>
-//         ${arr.map(index=> `
-//           <option value="${index}">${index}</option>
-//         `).join("")}
-//       </select>
-  
-//       <svg class="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none"
-//            fill="none" stroke="currentColor" stroke-width="2"
-//            viewBox="0 0 24 24">
-//         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-//       </svg>
-//     </div>
-//   </div>`;
-
-//   orderInput.appendChild(initialQuantityDiv);
-//   quantity = document.getElementById('productQuantity'); //required
-
-//   quantity.addEventListener('change', e=>{
-
-//     const addBtn = document.createElement("button");
-//     addBtn.type = "button";
-//     addBtn.id = "addProductBtn";
-//     addBtn.className = "mt-3 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm";
-//     addBtn.textContent = "Add Product";
-
-//     orderInput.appendChild(addBtn);
-//   })
-
-// })
-
+let items = [];
 orderInput.addEventListener("click", (e) => {
   if (e.target.id === "addProductBtn") {
 
@@ -244,23 +191,39 @@ orderInput.addEventListener("click", (e) => {
       quantity: qty
     });
 
+
+    let isNotFound = true; 
     // Display selected product
-    const item = document.createElement("div");
-    item.id = "productItem"; 
-    item.className = "flex justify-between bg-gray-100 px-3 py-2 rounded";
+    if (items.length != 0){//if there is an already added product to the added product list prior to submission -> check if one of these products matches the current product's name -> if yes, merge items. else, create a new one
+        items.forEach(item =>{
+          if (item.querySelector('span').textContent === productName){ 
+            const productQtySpan = item.querySelector('span').nextElementSibling;
+            productQtySpan.textContent = `x${Number(productQtySpan.textContent[1])+qty}`; //no need for counter or an object or map of added products name- added quantity pairs 
+            isNotFound = false; //false for the current productName
+          }
+        })
+    }
+    if (items.length == 0 || isNotFound) {
+      const item = document.createElement("div");
+      item.id = "productItem"; 
+      item.className = "flex justify-between bg-gray-100 px-3 py-2 rounded";
+  
+      item.innerHTML = `
+      <div class="flex items-center gap-3">
+          <span id="productNameSpan">${productName}</span>
+          <span id="productQtySpan" class="font-semibold text-gray-700">x${qty}</span>
+        </div>
+  
+        <button id="cnlProductBtn"
+          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+          Cancel
+        </button>`;
 
-    item.innerHTML = `
-    <div class="flex items-center gap-3">
-        <span id="productNameSpan">${productName}</span>
-        <span id="productQtySpan" class="font-semibold text-gray-700">x${qty}</span>
-      </div>
 
-      <button id="cnlProductBtn"
-        class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
-        Cancel
-      </button>`;
+      items.push(item);   
+      selectedProductsDiv.appendChild(item);
+    }
 
-    selectedProductsDiv.appendChild(item);
 
     const productObj = findOrderProduct(productName);
       if (productObj){
@@ -336,18 +299,58 @@ orderInput.addEventListener("click", (e) => {
   }
 
   if (e.target.id === "cnlProductBtn"){
-    const itemProduct = document.getElementById('itemProduct'); //no need to check if this item exists because of redundancy (this item contains the cnlProductBtn)
+    // e.preventDefault();
+    const itemProduct = document.getElementById('productItem'); //no need to check if this item exists because of redundancy (this item contains the cnlProductBtn)
     const productName = document.getElementById("productNameSpan").textContent;
-    const qty = document.getElementById("productQtySpan").textContent; 
-    console.log(productName);
+    const quant = document.getElementById("productQtySpan").textContent; 
+    const qty = quant[1];
 
     const productObj = findOrderProduct(productName);
       if (productObj){
         productObj.stock += Number(qty);
       }
     saveProducts(); 
-    itemProduct.remove();
-    // selectedProductsDiv.removeChild(itemProduct); //or 
+    // reset selectors
+    product.value = "";
+    quantity.value = ""; //unnecessary because quantityDiv is deleted anyway
+
+    const productDiv = document.getElementById("productDiv");
+    if (productDiv){
+      productDiv.innerHTML = `
+        <div class="w-full max-w-sm">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Product
+          </label>
+  
+          <div class="relative">
+            <select
+              id="productName"
+              class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm
+                    text-gray-700 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200
+                    focus:outline-none transition">
+  
+              <option value=""disabled selected>Select Product</option>
+              ${products.filter(p => p.stock > 0).map(p => {
+                if (p.name === product.value.trim()){
+                  return `<option value="${p.name}">${p.name} (${limit} left)</option>`
+                }
+                return `
+                <option value="${p.name}">${p.name} (${p.stock} left)</option>
+              `}).join("")}
+            </select>
+  
+            <svg class="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none"
+                fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>`;
+        product = document.getElementById('productName'); //required 
+        product.addEventListener('change', productChangeEvent);
+      }
+
+    itemProduct.remove(); // OR selectedProductsDiv.removeChild(itemProduct); 
 
   }
 });

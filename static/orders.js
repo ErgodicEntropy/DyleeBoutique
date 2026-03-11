@@ -1,6 +1,6 @@
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 let orderId = JSON.parse(localStorage.getItem("orderId")) || 0;
-let products = JSON.parse(localStorage.getItem("products") || []);
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
 const orderBody = document.getElementById("orderBody");
 const cardDiv = document.getElementById("cardDiv");

@@ -41,11 +41,11 @@ selectedProductsDiv.className = "mt-4 space-y-2";
 orderInput.appendChild(selectedProductsDiv);
 
 let selectedProducts = []; //array of {product:string, quantity:integer} objects
-let selectInput;
+let initialProductDiv;
 
-selectInput = document.createElement('div');
-selectInput.id = "productDiv";
-selectInput.innerHTML = `
+initialProductDiv = document.createElement('div');
+initialProductDiv.id = "productDiv";
+initialProductDiv.innerHTML = `
 <div class="w-full max-w-sm">
   <label class="block text-sm font-medium text-gray-700 mb-2">
     Product
@@ -72,7 +72,7 @@ selectInput.innerHTML = `
   </div>
 </div>`
 
-orderInput.appendChild(selectInput);
+orderInput.appendChild(initialProductDiv);
 let product = document.getElementById('productName'); //required 
 
 let quantity; 
@@ -83,16 +83,29 @@ let arr = [];
 
 const productChangeEvent = e =>{
   e.preventDefault();
+
+  const quantityDiv = document.getElementById("quantityDiv");
+  if (quantityDiv) quantityDiv.remove(); 
   
+  const addbtn = document.getElementById("addProductBtn");
+  if (addbtn) addbtn.remove();
+
+  const drpbtn = document.getElementById("drpProductBtn");
+  if (drpbtn) drpbtn.remove();
+
+  const btnspace = document.getElementById("btnSpace");
+  if (btnspace) btnspace.remove();
+
+
   limit = findOrderProduct(product.value.trim()).stock;
   
   for (let k = 1; k <= limit; k++){
     arr.push(k);
   }
 
-  const quantityInput = document.createElement('div');
-  quantityInput.id = "quantityDiv"; 
-  quantityInput.innerHTML = `
+  const initialQuantityDiv = document.createElement('div');
+  initialQuantityDiv.id = "quantityDiv"; 
+  initialQuantityDiv.innerHTML = `
   <div class="w-full max-w-sm">
     <label class="block text-sm font-medium text-gray-700 mb-2">
       Quantity
@@ -118,19 +131,44 @@ const productChangeEvent = e =>{
       </svg>
     </div>
   </div>`;
-  arr = [];
-  orderInput.appendChild(quantityInput);
+
+  arr = []; //empty the array
+  orderInput.appendChild(initialQuantityDiv);
   quantity = document.getElementById('productQuantity'); //required
 
   quantity.addEventListener('change', e=>{
 
+    const addbtn = document.getElementById("addProductBtn");
+    if (addbtn) addbtn.remove();
+
+    const drpbtn = document.getElementById("drpProductBtn");
+    if (drpbtn) drpbtn.remove();
+
+    const btnspace = document.getElementById("btnSpace");
+    if (btnspace) btnspace.remove();
+
+    const space = document.createElement('div');
+    space.id = "btnSpace";
+    space.className="mb-4 grid grid-cols-2";
+
     const addBtn = document.createElement("button");
     addBtn.type = "button";
     addBtn.id = "addProductBtn";
-    addBtn.className = "mt-3 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm";
+    addBtn.className = "mt-3 px-5 py-3 bg-teal-600 text-white rounded-lg text-sm";
     addBtn.textContent = "Add Product";
 
-    orderInput.appendChild(addBtn);
+    space.appendChild(addBtn);
+
+    const drpBtn = document.createElement("button");
+    drpBtn.type = "button";
+    drpBtn.id = "drpProductBtn";
+    drpBtn.className = "mt-3 px-5 py-3 bg-orange-600 text-white rounded-lg text-sm";
+    drpBtn.textContent = "Drop Product";
+
+    space.appendChild(drpBtn);
+
+    orderInput.appendChild(space);
+
   })
 }
 
@@ -145,9 +183,9 @@ product.addEventListener('change', productChangeEvent);
 //     arr.push(k);
 //   }
 
-//   const quantityInput = document.createElement('div');
-//   quantityInput.id = "quantityDiv"; 
-//   quantityInput.innerHTML = `
+//   const initialQuantityDiv = document.createElement('div');
+//   initialQuantityDiv.id = "quantityDiv"; 
+//   initialQuantityDiv.innerHTML = `
 //   <div class="w-full max-w-sm">
 //     <label class="block text-sm font-medium text-gray-700 mb-2">
 //       Quantity
@@ -174,7 +212,7 @@ product.addEventListener('change', productChangeEvent);
 //     </div>
 //   </div>`;
 
-//   orderInput.appendChild(quantityInput);
+//   orderInput.appendChild(initialQuantityDiv);
 //   quantity = document.getElementById('productQuantity'); //required
 
 //   quantity.addEventListener('change', e=>{
@@ -208,12 +246,19 @@ orderInput.addEventListener("click", (e) => {
 
     // Display selected product
     const item = document.createElement("div");
+    item.id = "productItem"; 
     item.className = "flex justify-between bg-gray-100 px-3 py-2 rounded";
 
     item.innerHTML = `
-      <span>${productName}</span>
-      <span class="font-semibold">x${qty}</span>
-    `;
+    <div class="flex items-center gap-3">
+        <span id="productNameSpan">${productName}</span>
+        <span id="productQtySpan" class="font-semibold text-gray-700">x${qty}</span>
+      </div>
+
+      <button id="cnlProductBtn"
+        class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+        Cancel
+      </button>`;
 
     selectedProductsDiv.appendChild(item);
 
@@ -266,8 +311,44 @@ orderInput.addEventListener("click", (e) => {
     const quantityDiv = document.getElementById("quantityDiv");
     if (quantityDiv) quantityDiv.remove(); 
 
-    const btn = document.getElementById("addProductBtn");
-    if (btn) btn.remove();
+    const addbtn = document.getElementById("addProductBtn");
+    if (addbtn) addbtn.remove();
+
+    const drpBtn = document.getElementById("drpProductBtn");
+    if (drpBtn) drpBtn.remove();
+
+  }
+
+  if (e.target.id === "drpProductBtn"){
+    // reset selectors
+    product.value = "";
+    quantity.value = ""; //unnecessary because quantityDiv is deleted anyway
+
+    const quantityDiv = document.getElementById("quantityDiv");
+    if (quantityDiv) quantityDiv.remove(); 
+
+    const addbtn = document.getElementById("addProductBtn");
+    if (addbtn) addbtn.remove();
+
+    const drpBtn = document.getElementById("drpProductBtn");
+    if (drpBtn) drpBtn.remove();
+
+  }
+
+  if (e.target.id === "cnlProductBtn"){
+    const itemProduct = document.getElementById('itemProduct'); //no need to check if this item exists because of redundancy (this item contains the cnlProductBtn)
+    const productName = document.getElementById("productNameSpan").textContent;
+    const qty = document.getElementById("productQtySpan").textContent; 
+    console.log(productName);
+
+    const productObj = findOrderProduct(productName);
+      if (productObj){
+        productObj.stock += Number(qty);
+      }
+    saveProducts(); 
+    itemProduct.remove();
+    // selectedProductsDiv.removeChild(itemProduct); //or 
+
   }
 });
 

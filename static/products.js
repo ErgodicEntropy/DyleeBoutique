@@ -74,9 +74,7 @@ products.forEach(product => {
         stockClass = "p-4 font-semibold text-red-600"; //indicates financial loss or risk
         stockMessage = "You're out of stock!";
     }
-
-    // https://www.marjanemall.ma/catalogsearch/result?q=mickey+mouse+t+shirt
-
+        // https://www.lemarketprice.com/en/products/?q=${product.name}
 productBody.insertAdjacentHTML("beforeend",`
 
 <tr id="tr-${product.id}" class="border-t">
@@ -94,9 +92,9 @@ productBody.insertAdjacentHTML("beforeend",`
 <td class="p-4">${product.price}DH</td>
 
 <td class="p-4">
- <a href="https://www.lemarketprice.com/en/products/?q=${product.name}" target="_blank"
+ <a href="https://www.marjanemall.ma/catalogsearch/result?q=${product.name}" target="_blank"
      class="block px-3 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition">
-    LeMarketPrice
+    MarjaneMall
   </a>
 
   <a href="https://www.jumia.ma/catalog/?q=${product.name}" target="_blank"

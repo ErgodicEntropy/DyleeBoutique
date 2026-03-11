@@ -46,14 +46,31 @@ function renderTable() {
   }
 
   orders.forEach(order => {
-    const productName = order.product;
-    const product = findOrderProduct(productName);
+    const selectedProducts = order.products; //selected products of the current order
+    console.log(selectedProducts);
+    let totalQuantity = 0; 
+    let productCostSum = 0;
+    selectedProducts.forEach(item =>{
+      const productName = item.product;
+      const product = findOrderProduct(productName);
+      productCostSum += Number(item.quantity)*Number(product.cost);
+      totalQuantity += Number(item.quantity); 
+    })
     let priceClass = "p-4 font-semibold text-green-600";
     let priceMessage = "Good margin"; 
-    if (Number(order.price)/Number(order.quantity) < Number(product.price)){ //if the price of your order is lower than the product's estimated price (minimum selling price)
-      priceClass = "p-4 font-semibold text-red-600"; //indicates financial loss or risk
-      priceMessage = "Price below minimum selling price (risk)";
+    if (Number(order.price) < productCostSum){ //if the price of your order is lower than the sum of its products costs (or product cost if it's 1-1) 
+        priceClass = "p-4 font-semibold text-red-600"; //indicates financial loss or risk
+        priceMessage = "Price below minimum selling price (risk)";
     }
+
+    // const productName = order.product;
+    // const product = findOrderProduct(productName);
+    // let priceClass = "p-4 font-semibold text-green-600";
+    // let priceMessage = "Good margin"; 
+    // if (Number(order.price)/Number(order.quantity) < Number(product.price)){ //if the price of your order is lower than the product's estimated price (minimum selling price)
+    //   priceClass = "p-4 font-semibold text-red-600"; //indicates financial loss or risk
+    //   priceMessage = "Price below minimum selling price (risk)";
+    // }
     let statusClass;
 
     switch(order.status){
@@ -82,8 +99,10 @@ function renderTable() {
         <td class="p-4 font-semibold text-gray-800">${order.customer}</td>
         <td class="p-4 text-gray-600">${order.phone}</td>
         <td class="p-4 text-gray-500">${order.date}</td>
-        <td class="p-4 text-gray-700">${order.product}</td>
-        <td class="p-4 text-gray-700">${order.quantity}</td>
+        <td class="p-4 text-gray-700">
+          ${selectedProducts.map(item => `${item.product} (${item.quantity})`).join(", ")}
+        </td>
+        <td class="p-4 text-gray-700">${totalQuantity}</td>
         <td class="${priceClass}" title="${priceMessage}">${order.price}DH</td>
         <td class="p-4 text-gray-600">${order.city}</td>
         <td class="p-4 text-gray-600">${order.address}</td>
@@ -187,13 +206,22 @@ document.addEventListener("click", e => {
   const index = orders.findIndex(o => o.id === id);
 
   if (e.target.classList.contains("deleteBtn")) {
-    const productName = orders[index].product;
-    const product = findOrderProduct(productName);
-
-    if (product){
-      product.stock += Number(orders[index].quantity); //product returned to the product list
+      const selectedProducts = orders.products;
+      selectedProducts.forEach(item => {
+        const productObj = findOrderProduct(item.product);
+        if (productObj){
+          productObj.stock += Number(item.quantity);
+        }
+      });
       saveProducts(); 
-    }
+
+    // const productName = orders[index].product;
+    // const product = findOrderProduct(productName);
+
+    // if (product){
+    //   product.stock += Number(orders[index].quantity); //product returned to the product list
+    //   saveProducts(); 
+    // }
     orders.splice(index, 1);
     saveOrders();
     renderTable();
@@ -309,14 +337,28 @@ document.addEventListener("DOMContentLoaded", () => {
       id: orderId,
       customer: data.customer,
       phone: data.phone,
-      product: data.product,
-      quantity: data.quantity, 
+      products: data.products,
       price: data.price,
       city: data.city,
       address: data.address,
       date: new Date().toISOString().slice(0, 10),
       status: "Pending"
     });
+
+  // if (data) {
+  //   orderId++;
+  //   orders.push({
+  //     id: orderId,
+  //     customer: data.customer,
+  //     phone: data.phone,
+  //     product: data.product,
+  //     quantity: data.quantity, 
+  //     price: data.price,
+  //     city: data.city,
+  //     address: data.address,
+  //     date: new Date().toISOString().slice(0, 10),
+  //     status: "Pending"
+  //   });
 
     saveOrders();
     localStorage.removeItem("orderdata");

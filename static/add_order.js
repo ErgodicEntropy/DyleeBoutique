@@ -16,8 +16,8 @@ function findOrderProduct(productName){//find the product object associated with
   return null; 
 }
 
-//find customer id by name (you can add more candidate keys) -> add phone number
-function findCustomerID(orders, customerName, customerPhone){ //function breaks down if two different customers have same full name
+//find customer id by name + phone number
+function findCustomerID(orders, customerName, customerPhone){ 
   for (let k = 0; k < orders.length; k++){
     const order = orders[k];
     if (order.customer == customerName.trim() && order.phone == customerPhone.trim()){ //order attributes are already trimmed
@@ -34,7 +34,17 @@ const orderInput = document.getElementById("orderInputs");
 
 const customer = document.getElementById('customer'); //required 
 const phone = document.getElementById('phone') || ""; 
-const selectInput = document.createElement('div');
+
+const selectedProductsDiv = document.createElement("div");
+selectedProductsDiv.id = "selectedProducts";
+selectedProductsDiv.className = "mt-4 space-y-2";
+orderInput.appendChild(selectedProductsDiv);
+
+let selectedProducts = []; //array of {product:string, quantity:integer} objects
+let selectInput;
+
+selectInput = document.createElement('div');
+selectInput.id = "productDiv";
 selectInput.innerHTML = `
 <div class="w-full max-w-sm">
   <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -63,27 +73,27 @@ selectInput.innerHTML = `
 </div>`
 
 orderInput.appendChild(selectInput);
-const product = document.getElementById('productName'); //required 
+let product = document.getElementById('productName'); //required 
 
 let quantity; 
 
-product.addEventListener('change', e=>{
+let limit; 
+
+let arr = [];
+
+const productChangeEvent = e =>{
   e.preventDefault();
-
-  const quantityDiv = document.getElementById('quantityDiv'); 
-  if (quantityDiv){
-    quantityDiv.remove();
-  }
-  const limit = findOrderProduct(product.value.trim()).stock;
-
-  let arr =[];
+  
+  limit = findOrderProduct(product.value.trim()).stock;
+  
   for (let k = 1; k <= limit; k++){
     arr.push(k);
   }
 
   const quantityInput = document.createElement('div');
+  quantityInput.id = "quantityDiv"; 
   quantityInput.innerHTML = `
-  <div id="quantityDiv" class="w-full max-w-sm">
+  <div class="w-full max-w-sm">
     <label class="block text-sm font-medium text-gray-700 mb-2">
       Quantity
     </label>
@@ -107,12 +117,159 @@ product.addEventListener('change', e=>{
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
       </svg>
     </div>
-  </div>`
-  
+  </div>`;
+  arr = [];
   orderInput.appendChild(quantityInput);
-  quantity = document.getElementById('productQuantity'); 
-})
+  quantity = document.getElementById('productQuantity'); //required
 
+  quantity.addEventListener('change', e=>{
+
+    const addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.id = "addProductBtn";
+    addBtn.className = "mt-3 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm";
+    addBtn.textContent = "Add Product";
+
+    orderInput.appendChild(addBtn);
+  })
+}
+
+product.addEventListener('change', productChangeEvent);
+
+// product.addEventListener('change', e=>{
+//   e.preventDefault();
+  
+//   limit = findOrderProduct(product.value.trim()).stock;
+  
+//   for (let k = 1; k <= limit; k++){
+//     arr.push(k);
+//   }
+
+//   const quantityInput = document.createElement('div');
+//   quantityInput.id = "quantityDiv"; 
+//   quantityInput.innerHTML = `
+//   <div class="w-full max-w-sm">
+//     <label class="block text-sm font-medium text-gray-700 mb-2">
+//       Quantity
+//     </label>
+  
+//     <div class="relative">
+//       <select
+//         id="productQuantity"
+//         class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm
+//                text-gray-700 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200
+//                focus:outline-none transition" required>
+  
+//         <option value="" disabled selected>Select Quantity</option>
+//         ${arr.map(index=> `
+//           <option value="${index}">${index}</option>
+//         `).join("")}
+//       </select>
+  
+//       <svg class="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none"
+//            fill="none" stroke="currentColor" stroke-width="2"
+//            viewBox="0 0 24 24">
+//         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+//       </svg>
+//     </div>
+//   </div>`;
+
+//   orderInput.appendChild(quantityInput);
+//   quantity = document.getElementById('productQuantity'); //required
+
+//   quantity.addEventListener('change', e=>{
+
+//     const addBtn = document.createElement("button");
+//     addBtn.type = "button";
+//     addBtn.id = "addProductBtn";
+//     addBtn.className = "mt-3 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm";
+//     addBtn.textContent = "Add Product";
+
+//     orderInput.appendChild(addBtn);
+//   })
+
+// })
+
+orderInput.addEventListener("click", (e) => {
+  if (e.target.id === "addProductBtn") {
+
+    if (!product.value || !quantity.value) {
+      alert("Select product and quantity");
+      return;
+    }
+
+    const productName = product.value.trim();
+    const qty = Number(quantity.value.trim());
+
+    selectedProducts.push({
+      product: productName,
+      quantity: qty
+    });
+
+    // Display selected product
+    const item = document.createElement("div");
+    item.className = "flex justify-between bg-gray-100 px-3 py-2 rounded";
+
+    item.innerHTML = `
+      <span>${productName}</span>
+      <span class="font-semibold">x${qty}</span>
+    `;
+
+    selectedProductsDiv.appendChild(item);
+
+    const productObj = findOrderProduct(productName);
+      if (productObj){
+        productObj.stock -= Number(qty);
+      }
+    saveProducts(); 
+
+    // reset selectors
+    product.value = "";
+    quantity.value = ""; //unnecessary because quantityDiv is deleted anyway
+
+    const productDiv = document.getElementById("productDiv");
+    if (productDiv){
+      productDiv.innerHTML = `
+        <div class="w-full max-w-sm">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Product
+          </label>
+  
+          <div class="relative">
+            <select
+              id="productName"
+              class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm
+                    text-gray-700 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-200
+                    focus:outline-none transition">
+  
+              <option value=""disabled selected>Select Product</option>
+              ${products.filter(p => p.stock > 0).map(p => {
+                if (p.name === product.value.trim()){
+                  return `<option value="${p.name}">${p.name} (${limit} left)</option>`
+                }
+                return `
+                <option value="${p.name}">${p.name} (${p.stock} left)</option>
+              `}).join("")}
+            </select>
+  
+            <svg class="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none"
+                fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>`;
+        product = document.getElementById('productName'); //required 
+        product.addEventListener('change', productChangeEvent);
+      }
+
+    const quantityDiv = document.getElementById("quantityDiv");
+    if (quantityDiv) quantityDiv.remove(); 
+
+    const btn = document.getElementById("addProductBtn");
+    if (btn) btn.remove();
+  }
+});
 
 const price = document.getElementById('price'); //required 
 const city = document.getElementById('city') || ""; 
@@ -134,12 +291,20 @@ manualForm.addEventListener('submit', async (e) => {
           throw new Error("Invalid phone number");
         }
 
-        const productName = product.value.trim();
-        const productObj = findOrderProduct(productName);
-        if (productObj){
-          productObj.stock -= Number(quantity.value.trim()); //product removed from the product list
-          saveProducts(); 
-        }
+        // const productName = product.value.trim();
+        // const productObj = findOrderProduct(productName);
+        // if (productObj){
+        //   productObj.stock -= Number(quantity.value.trim()); //product removed from the product list
+        //   saveProducts(); 
+        // }
+
+        // selectedProducts.forEach(item => {
+        //   const productObj = findOrderProduct(item.product);
+        //   if (productObj){
+        //     productObj.stock -= Number(item.quantity);
+        //   }
+        // });
+        // saveProducts(); 
 
         
         const CID = findCustomerID(orders, customer.value, phone.value); 
@@ -153,12 +318,22 @@ manualForm.addEventListener('submit', async (e) => {
             cid: id,
             customer: customer.value.trim(),
             phone: phone.value.trim(),
-            product: product.value.trim(),
-            quantity: Number(quantity.value.trim()),
+            products: selectedProducts,
             price: price.value.trim(),
             city: city.value.trim(),
             address: address.value.trim()
           };
+
+        // const data = {
+        //     cid: id,
+        //     customer: customer.value.trim(),
+        //     phone: phone.value.trim(),
+        //     product: product.value.trim(),
+        //     quantity: Number(quantity.value.trim()),
+        //     price: price.value.trim(),
+        //     city: city.value.trim(),
+        //     address: address.value.trim()
+        //   };
 
 
         for (const key in data) {

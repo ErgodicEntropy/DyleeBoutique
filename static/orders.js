@@ -1,6 +1,8 @@
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 let orderId = JSON.parse(localStorage.getItem("orderId")) || 0;
 let products = JSON.parse(localStorage.getItem("products")) || [];
+let customerId = JSON.parse(localStorage.getItem("customerId")) || 1; 
+
 
 const orderBody = document.getElementById("orderBody");
 const cardDiv = document.getElementById("cardDiv");
@@ -160,6 +162,23 @@ function renderCards() {
 
 
   orders.forEach(order => {
+    const selectedProducts = order.products; //selected products of the current order
+    console.log(selectedProducts);
+    let totalQuantity = 0; 
+    let productCostSum = 0;
+    selectedProducts.forEach(item =>{
+      const productName = item.product;
+      const product = findOrderProduct(productName);
+      productCostSum += Number(item.quantity)*Number(product.cost);
+      totalQuantity += Number(item.quantity); 
+    })
+    let priceClass = "font-medium text-green-600";
+    let priceMessage = "Good margin"; 
+    if (Number(order.price) < productCostSum){ //if the price of your order is lower than the sum of its products costs (or product cost if it's 1-1) 
+        priceClass = "font-medium text-red-600"; //indicates financial loss or risk
+        priceMessage = "Price below minimum selling price (risk)";
+    }
+
     const statusClass =
       order.status === "Confirmed"
         ? "bg-green-100 text-green-700"
@@ -178,11 +197,15 @@ function renderCards() {
           <span class="text-xs font-semibold px-3 py-1 rounded-full ${statusClass}">${order.status}</span>
         </div>
         <div class="space-y-1 text-sm text-gray-600">
-          <p><span class="font-medium text-gray-700">Product:</span> ${order.product}</p>
-          <p><span class="font-medium text-gray-700">Price:</span> ${order.price}DH</p>
+          <p><span class="font-medium text-gray-700">Products:</span>
+            ${selectedProducts.map(item => `${item.product} (${item.quantity})`).join(", ")}
+          </p>
+          <p><span class="font-medium text-gray-700">Total Quantity:</span> ${totalQuantity}</p>
+          <p><span class="font-medium text-gray-700">Price:</span><span class="${priceClass}" title="${priceMessage}"> ${order.price}DH</span></p>
           <p><span class="font-medium text-gray-700">City:</span> ${order.city}</p>
           <p><span class="font-medium text-gray-700">Phone:</span> ${order.phone}</p>
-        </div>
+          <p><span class="font-medium text-gray-700">Date:</span> ${order.date}</p>
+          </div>
         <div class="flex justify-between pt-3 border-t">
           <button data-id="${order.id}" class="confirmBtn text-sm font-medium ${
             order.status === "Confirmed" ? "text-yellow-600 hover:text-yellow-800" : "text-green-600 hover:text-green-800"
@@ -206,7 +229,7 @@ document.addEventListener("click", e => {
   const index = orders.findIndex(o => o.id === id);
 
   if (e.target.classList.contains("deleteBtn")) {
-      const selectedProducts = orders.products;
+      const selectedProducts = orders[index].products;
       selectedProducts.forEach(item => {
         const productObj = findOrderProduct(item.product);
         if (productObj){
@@ -214,7 +237,8 @@ document.addEventListener("click", e => {
         }
       });
       saveProducts(); 
-
+      if (orderId > 0) orderId--;
+      if (customerId > 0) customerId--; 
     // const productName = orders[index].product;
     // const product = findOrderProduct(productName);
 
@@ -332,9 +356,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const data = JSON.parse(localStorage.getItem("orderdata"));
 
   if (data) {
-    orderId++;
     orders.push({
       id: orderId,
+      cid: data.cid,
       customer: data.customer,
       phone: data.phone,
       products: data.products,
@@ -344,6 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
       date: new Date().toISOString().slice(0, 10),
       status: "Pending"
     });
+    orderId++;
 
   // if (data) {
   //   orderId++;

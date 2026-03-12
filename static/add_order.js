@@ -390,16 +390,19 @@ manualForm.addEventListener('submit', async (e) => {
         // });
         // saveProducts(); 
 
-        
-        const CID = findCustomerID(orders, customer.value, phone.value); 
-        const id = CID ?? customerId; 
-        console.log(CID);
-        if (id == customerId){
-          customerId++
+        const CID = findCustomerID(orders, customer.value, phone.value); //id of a possible already-existing customer that matches the order info (name + phone number)
+        let cid;
+        if (CID){
+          cid = {value:CID, state:"old"}; //customer already exists
+        }
+        if (!CID){
+          cid = {value:customerId, state:"new"}; //new customer
+          customerId++;  
           localStorage.setItem("customerId", customerId);
-        };
+        }
+
         const data = {
-            cid: id,
+            cid: cid,
             customer: customer.value.trim(),
             phone: phone.value.trim(),
             products: selectedProducts,

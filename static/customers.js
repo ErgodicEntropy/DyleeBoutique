@@ -12,7 +12,6 @@ orders.forEach(order => {
   const products = order.products.map(productObj => Object.entries(productObj)); //assuming 3 products per order: products is [[[product, macbook],[quantity,2]],[[product, mercuriel],[quantity,6]],[[product, book],[quantity,3]]]
   let customerProducts = products.map(product => `${product[0][1]} (${product[1][1]})`).join(", ");
   const key = order.cid; //customer Id
-  console.log(key);
   if (key.state == "new") {
     customersMap[key.value] = {
       name: order.customer,

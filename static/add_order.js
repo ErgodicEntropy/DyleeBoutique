@@ -363,6 +363,10 @@ const phoneDiv = document.getElementById('phoneDiv');
 
 manualForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (items.length == 0){
+    alert(`Please add at least one product`);
+    return;
+  }
   if (phone){
       try {
         const match = phoneRegex.test(phone.value.trim()); 
@@ -393,7 +397,7 @@ manualForm.addEventListener('submit', async (e) => {
         const CID = findCustomerID(orders, customer.value, phone.value); //id of a possible already-existing customer that matches the order info (name + phone number)
         let cid;
         if (CID){
-          cid = {value:CID, state:"old"}; //customer already exists
+          cid = {value:CID?.value, state:"old"}; //customer already exists
         }
         if (!CID){
           cid = {value:customerId, state:"new"}; //new customer

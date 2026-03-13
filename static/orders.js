@@ -4,9 +4,10 @@ let products = JSON.parse(localStorage.getItem("products")) || [];
 let customerId = JSON.parse(localStorage.getItem("customerId")) || 1; 
 
 
+const tableDiv = document.getElementById("tableDiv");
+const orderHead = document.getElementById("orderHead");
 const orderBody = document.getElementById("orderBody");
 const cardDiv = document.getElementById("cardDiv");
-const tableDiv = document.getElementById("tableDiv");
 
 const tableBtn = document.getElementById("tableBtn");
 const cardBtn = document.getElementById("cardBtn");
@@ -37,14 +38,47 @@ function renderTable() {
 
   if (orders.length === 0){
     orderBody.innerHTML = `
-      <tr>
-      <td colspan="9" class="p-6 text-center text-gray-500">
-      No orders yet
-      </td>
-      </tr>
+    <div class="col-span-full flex flex-col items-center justify-center text-center bg-white p-10 rounded-xl shadow">
+    
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        class="w-16 h-16 text-gray-300 mb-4"
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M17 20h5V4H2v16h5m10 0v-6a3 3 0 00-6 0v6m6 0H7"/>
+      </svg>
+
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">
+        No Orders Yet
+      </h2>
+
+      <p class="text-gray-500 text-sm mb-5 max-w-sm">
+        When customers place their first orders, they will appear here with their order history and details.
+      </p>
+
+      <a href="add_order.html"
+        class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 transition">
+        Create First Order
+      </a>
+
+    </div>
     `;
 
     return;
+  } else {
+    orderHead.innerHTML = `
+        <tr>
+        <th class="p-4">ID</th>
+        <th class="p-4">Customer</th>
+        <th class="p-4">Phone</th>
+        <th class="p-4">Date</th>
+        <th class="p-4">Products</th>
+        <th class="p-4">Total Quantity</th>
+        <th class="p-4">Total Price</th>
+        <th class="p-4">City</th>
+        <th class="p-4">Address</th>
+        <th class="p-4">Status</th>
+        <th class="p-4">Action</th>
+        </tr>`;    
   }
 
   orders.forEach(order => {

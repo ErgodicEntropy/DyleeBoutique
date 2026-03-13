@@ -120,15 +120,23 @@ productBody.insertAdjacentHTML("beforeend",`
 
 <button
 data-id="${product.id}"
-class="updateBtn text-white bg-blue-500 px-3 py-1 rounded">
+class="postBtn text-white bg-purple-500 px-3 py-1 rounded-full">
 
-Update
+Post
 
 </button>
 
 <button
 data-id="${product.id}"
-class="deleteBtn text-white bg-red-500 px-3 py-1 rounded">
+class="updateBtn text-white bg-blue-500 px-3 py-1 rounded-full">
+
+Edit
+
+</button>
+
+<button
+data-id="${product.id}"
+class="deleteBtn text-white bg-red-500 px-3 py-1 rounded-full">
 
 Delete
 
@@ -217,6 +225,14 @@ Estim. Price: ${product.price}DH
 </div>
 
 <div class="flex border-t">
+
+<button
+data-id="${product.id}"
+class="postBtn flex-1 py-2 text-white bg-purple-600 hover:bg-purple-700">
+
+Post
+
+</button>
 
 <button
 data-id="${product.id}"
@@ -347,6 +363,22 @@ overlay.remove();
 
 productBody.addEventListener("click", e => {
 
+if (e.target.classList.contains("postBtn")){
+  Swal.fire({
+    title: "Post Product",
+    html:`
+    <h2></h2>
+    <p><p>
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    `,
+    preConfirm: ()=>{}
+  }).then()
+}
 if(e.target.classList.contains("deleteBtn")){
 
 const id = Number(e.target.dataset.id);

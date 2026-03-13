@@ -3,8 +3,8 @@ A small e-commerce project for my sister
 
 # To Do
 - Complete Dashboard
-- FIX CUSTOMERS.JS MESS
 - Orders PDF-JSON File problem
+- Products PDF-JSON File problem
 - Order many different products at once -> association class (quantity attribute) to capture N-N group by => create junction table or relation (or bi-allocate foreign keys) -> no need for a junction table or forein keys bi-allocation because we used compounded data values, forbidden in databases, in the table to avoid reference overhead
     - If the user add the same product to the order -> add up the numbers in the item span instead of creating a new item span (Done)
     - add cancel button -> stock increments back to its original value (Done)
@@ -17,7 +17,7 @@ A small e-commerce project for my sister
 - Add more customer attributes (data model)
 - Add more expenses attributes (data model)
 - Add more analytics metrics breakdown by field (finance, accounting, marketing, business, management) for better financial-accounting accuracy (target: fine-grained accuracy) -> useful for simulation, prediction, extrapolation, hindcast, forecast and decision-making (provisioning)
-- APIs to make automated campaign product posts on various social medias from the click of a button (automated campaign product metadata caption)
+- APIs to make automated campaign product posts on various social medias from the click of a button (automated campaign product metadata caption): Done
 - API for local market price estimation (priceData) or create a new one using flask + beautifulsoup for web scraping (avito, jumia, marjanemall, lemarketprice)
 - For moroccan markets: add search by category, brand and version (not just name)
 - Add more classes/entites for realistic data models

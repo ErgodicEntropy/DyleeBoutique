@@ -120,9 +120,9 @@ productBody.insertAdjacentHTML("beforeend",`
 
 <button
 data-id="${product.id}"
-class="postBtn text-white bg-purple-500 px-3 py-1 rounded-full">
+class="captionBtn text-white bg-purple-500 px-3 py-1 rounded-full">
 
-Post
+Caption
 
 </button>
 
@@ -228,9 +228,9 @@ Estim. Price: ${product.price}DH
 
 <button
 data-id="${product.id}"
-class="postBtn flex-1 py-2 text-white bg-purple-600 hover:bg-purple-700">
+class="captionBtn flex-1 py-2 text-white bg-purple-600 hover:bg-purple-700">
 
-Post
+Caption
 
 </button>
 
@@ -363,21 +363,62 @@ overlay.remove();
 
 productBody.addEventListener("click", e => {
 
-if (e.target.classList.contains("postBtn")){
+if (e.target.classList.contains("captionBtn")){
+  const id = Number(e.target.dataset.id);
+
+  const product = products.find(p => p.id === id);
+
   Swal.fire({
-    title: "Post Product",
+    title: "Product Caption",
     html:`
-    <h2></h2>
-    <p><p>
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-    `,
-    preConfirm: ()=>{}
-  }).then()
+    <div class="max-w-2xl mx-auto p-6 bg-gray-50 font-sans">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Social Media Caption</h2>
+
+      <div class="bg-white p-4 rounded-lg shadow-sm border mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-600">The FOMO Vibe (Darija)</span>
+          <button id="copyBtn" class="text-sm text-gray-400 hover:text-blue-500">Copy</button>
+        </div>
+        <p id="captionParagraph" class="text-gray-700 leading-relaxed">
+          عييتي كتقلبي على الجودة وبثمن معقول؟ 🤔  
+
+          جربي <strong>${product.name}</strong> من <strong>${product.brand}</strong> ✨  
+          مثالي سواء لوليدك الصغير أو لأي واحد باغي <strong>${product.category}</strong> مريح، زوين ويدوم مع الوقت.  
+
+          غير بـ <strong>${product.price} درهم</strong> برك! 💸  
+          وردي بالك… بقاو غير <strong>${product.stock} حبات</strong> فالسوك، والطلب عليهم طالع بزاف ⏳  
+
+          ما تضيعش الفرصة وخلي السلة ديالك عامرة 😍  
+
+          📩 تواصلي معنا دابا: [Link]  
+
+          #DyleeBoutique #Morocco #ملابس_أطفال #تخفيضات #${product.brand}
+      </p>
+      </div>
+
+    </div>`,
+    showConfirmButton: true,
+    confirmButtonText: 'Done',
+    didOpen: ()=>{
+      const paragraph = document.getElementById('captionParagraph');
+      const copyBtn = document.getElementById("copyBtn");
+      copyBtn.addEventListener('click',async (e)=>{
+        e.preventDefault();
+        try {
+          await navigator.clipboard.writeText(paragraph.innerText);
+          copyBtn.textContent = "✅ Copied!";
+          copyBtn.classList.replace('text-blue-500', 'text-green-600');
+          
+          setTimeout(() => {
+            copyBtn.textContent = "Copy Text";
+            copyBtn.classList.replace('text-green-600', 'text-blue-500');
+          }, 2000);
+        } catch(err){
+          console.error('Failed to copy text: ', err);       
+        }
+      })
+    }
+  })
 }
 if(e.target.classList.contains("deleteBtn")){
 

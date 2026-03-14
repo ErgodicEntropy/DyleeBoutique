@@ -3,7 +3,8 @@ A small e-commerce project for my sister
 
 # To Do
 - Complete Dashboard
-- FIX ALL INTERDEPENDENCE ISSUES 
+- FIX ALL INTERDEPENDENCE ISSUES BETWEEN ENTITIES
+- Fix Customers unconditional self-increment issue everytime customer.js loads
 - Orders PDF-JSON File problem
 - Products PDF-JSON File problem
 - Order many different products at once -> association class (quantity attribute) to capture N-N group by => create junction table or relation (or bi-allocate foreign keys) -> no need for a junction table or forein keys bi-allocation because we used compounded data values, forbidden in databases, in the table to avoid reference overhead

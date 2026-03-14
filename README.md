@@ -16,7 +16,6 @@ A small e-commerce project for my sister
 - Add more expenses attributes (data model)
 - Add more analytics metrics breakdown by field (finance, accounting, marketing, business, management) for better financial-accounting accuracy (target: fine-grained accuracy) -> useful for simulation, prediction, extrapolation, hindcast, forecast and decision-making (provisioning)
 - APIs to make automated campaign product posts on various social medias from the click of a button 
-- Automated campaign product metadata caption (language attribute, vibe attribute): Done
 - API for local market price estimation (priceData) or create a new one using flask + beautifulsoup for web scraping (avito, jumia, marjanemall, lemarketprice)
 - For moroccan markets: add search by category, brand and version (not just name)
 - Add more classes/entites for realistic data models

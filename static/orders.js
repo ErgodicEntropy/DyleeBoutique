@@ -1,8 +1,10 @@
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
-let orderId = JSON.parse(localStorage.getItem("orderId")) || 0;
+let orderId = JSON.parse(localStorage.getItem("orderId")) || 1;
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let customerId = JSON.parse(localStorage.getItem("customerId")) || 1; 
 
+console.log(products);
+console.log(orders);
 
 const tableDiv = document.getElementById("tableDiv");
 const orderHead = document.getElementById("orderHead");

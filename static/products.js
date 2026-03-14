@@ -1,5 +1,7 @@
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let productId = JSON.parse(localStorage.getItem("productId")) || 0; // Fix Product ID system: decouple products of the same name into product.stock many products with the same name
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
 
 const productBody = document.getElementById("productBody");
 const cardContainer = document.getElementById("cardContainer");
@@ -22,7 +24,13 @@ localStorage.setItem("products", JSON.stringify(products));
 localStorage.setItem("productId", productId);
 }
 
+function saveOrders() {
+  localStorage.setItem("orders", JSON.stringify(orders));
+}
 
+function isOrderProduct(product, order){//checks whether a given product is checked or belongs to a given order
+  return order.products.some(productObj => productObj.product === product.name);
+}
 
 /* ----------------------- IMAGE ----------------------- */
 
@@ -266,6 +274,10 @@ Delete
 
 function openUpdateModal(product){
 
+const affectedOrders = orders.filter(order => isOrderProduct(product,order)); //find all orders affected by changes in the current product before such changes take place (save)
+
+let oldname = product.name;
+
 const overlay = document.createElement("div");
 
 overlay.className =
@@ -345,6 +357,16 @@ product.image = await readImage(file);
 
 }
 
+affectedOrders.forEach(affectedOrder => {//forEach makes implicit assignemnts -> no need to make changes on orders array because affectedOrder is a reference to orders object elements (deep copy in case of compounded data type: same memory address)
+  affectedOrder.products.forEach(productObj => {
+    if (productObj.product === oldname){
+      productObj.product = product.name;
+    }
+  }) 
+})
+saveOrders();
+
+
 saveProducts();
 
 renderTable();
@@ -353,7 +375,10 @@ renderCards();
 
 overlay.remove();
 
+
 };
+
+
 
 }
 

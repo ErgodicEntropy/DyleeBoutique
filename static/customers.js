@@ -31,7 +31,7 @@ orders.forEach(order => {
       customersMap[key.value].spent += Number(order.price) || 0;
     }
     if (!customers.includes(customersMap[key.value])){
-      customers.push(customersMap[key.value]);
+      customers.push(customersMap[key.value]); //FIX
     }
 
   } else {
@@ -45,7 +45,7 @@ orders.forEach(order => {
       customersMap[key.value].spent += Number(order.price) || 0;
     }
     if (!customers.includes(customersMap[key.value])){
-      customers.push(customersMap[key.value]);
+      customers.push(customersMap[key.value]); //FIX
     }
 
   }

@@ -37,20 +37,22 @@ function computeProductOrders(orders) {
   const deliveredCounts = {}
   // Count orders per product
   orders.forEach(order => {
-    const product = order.product;
+    order.products.forEach(productObj => {
+      if (!totalCounts[productObj.product]) {
+        totalCounts[productObj.product] = 0;
+        deliveredCounts[productObj.product] = 0;
+      }
+  
+      totalCounts[productObj.product]++;
+  
+      if (order.status == "Confirmed"){
+        deliveredCounts[productObj.product]++;
+      }
+  
+    });
 
-    if (!totalCounts[product]) {
-      totalCounts[product] = 0;
-      deliveredCounts[product] = 0;
-    }
+    })
 
-    totalCounts[product]++;
-
-    if (order.status == "Confirmed"){
-      deliveredCounts[product]++;
-    }
-
-  });
 
   return {total: totalCounts, delivered: deliveredCounts};
 }
@@ -59,17 +61,18 @@ function computeProductPrices(orders){
   const productPrices = {}
   // Count orders per product
   orders.forEach(order => {
-    const product = order.product;
+    order.products.forEach(productObj => {
+      if (!productPrices[productObj.product]) {
+        productPrices[productObj.product] = 0;
+      }
+  
+      if (order.status == "Confirmed"){
+        productPrices[productObj.product] += Number(order.price);
+      }
+  
+    });
 
-    if (!productPrices[product]) {
-      productPrices[product] = 0;
-    }
-
-    if (order.status == "Confirmed"){
-      productPrices[product] += Number(order.price);
-    }
-
-  });
+    })
 
   return productPrices;
 
@@ -118,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Top Locations: top cities in terms of demand (orders regardless of status)
 
-  let temporaryOrders = orders; //a new array used temporarirly for locations
+  let temporaryOrders = orders; //a new array used temporarily for locations
 
   const percentages = computeCityPercentages(temporaryOrders);
   const locationsDiv = document.getElementById('locationsDiv');
@@ -189,8 +192,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const productPrices = computeProductPrices(orders);
 
   let temporaryPO = orders;
-  temporaryPO = temporaryPO.map(order=>order.product).filter((value,index,self) => {return self.indexOf(value) == index}); 
-  temporaryPO = temporaryPO.map(product => ({product:product, productPrice:productPrices[product]}));
+  temporaryPO = temporaryPO.map(order=>order.products).map(productArr => productArr.map(productObj => productObj.product)); 
+  let bigArr = []; 
+  for (let k = 0; k < temporaryPO.length; k++){
+      bigArr = [...bigArr, temporaryPO[k]]
+  }
+  temporaryPO = bigArr.filter((value, index, self) => self.indexOf(value) == index);
+  temporaryPO = temporaryPO[0].map(product => ({product:product, productPrice:productPrices[product]}));
   //sort by order (weak condition), sort by delivery/price (strong condition)
   temporaryPO.sort((a,b)=> b.productPrice - a.productPrice); //we sort by price because we assume cases of products ordered frequently but rarely delivered to be rare (as order and deliver correlate) to avoid downplaying such products
   
@@ -245,20 +253,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const lifetimeValue = document.getElementById('lifetimeValue');
 
   const NC = customers.filter(customer => customer.status == "new").length;
-  console.log(NC);
-  newCustomers.value = NC;
+  newCustomers.textContent = NC;
 
   const RC = customers.filter(customer => customer.status == "returned").length; 
-  console.log(RC);
-  returningCustomers.value = RC;
+  returningCustomers.textContent = RC;
 
-  const RR = (returningCustomers.value/customers.length)*100;
-  console.log(RR);
-  retentionRate.value = RR;
+  const RR = ((Number(returningCustomers.textContent)/customers.length)*100).toFixed(2);
+  retentionRate.textContent = RR;
 
   const LTV = customers.map(customer => customer.spent).reduce((sum,a)=>sum+a,0);
-  console.log(LTV);
-  lifetimeValue.value = LTV;
+  lifetimeValue.textContent = LTV;
 
 
   // Revenue / Expenses / Profit chart

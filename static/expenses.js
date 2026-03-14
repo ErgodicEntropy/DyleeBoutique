@@ -16,9 +16,10 @@ if (products && expenseId < products.length){
         saveExpenses();
     })
 }
+const tableDiv = document.getElementById("tableDiv");
+const expenseHead = document.getElementById("expenseHead");
 const expenseBody = document.getElementById("expenseBody");
 const cardDiv = document.getElementById("cardDiv");
-const tableDiv = document.getElementById("tableDiv");
 
 const tableBtn = document.getElementById("tableBtn");
 const cardBtn = document.getElementById("cardBtn");
@@ -35,15 +36,45 @@ function saveExpenses() {
 // Render table
 function renderTable() {
   expenseBody.innerHTML = "";
-
   if (expenses.length === 0) {
     expenseBody.innerHTML = `
-      <tr>
-        <td colspan="5" class="p-6 text-center text-gray-500">No expenses yet</td>
-      </tr>
+    <div class="col-span-full flex flex-col items-center justify-center text-center bg-white p-10 rounded-xl shadow">
+    
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        class="w-16 h-16 text-gray-300 mb-4"
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M17 20h5V4H2v16h5m10 0v-6a3 3 0 00-6 0v6m6 0H7"/>
+      </svg>
+
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">
+        No Expenses Yet
+      </h2>
+
+      <p class="text-gray-500 text-sm mb-5 max-w-sm">
+        When you add a product, its expense will automatically appear under Product Purchase category.
+      </p>
+
+      <a href="add_expense.html"
+        class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 transition">
+        Create First Expense
+      </a>
+
+    </div>
     `;
+
     return;
+  } else {
+    expenseHead.innerHTML = `
+          <tr>
+            <th class="p-4">ID</th>
+            <th class="p-4">Name</th>
+            <th class="p-4">Amount</th>
+            <th class="p-4">Category</th>
+            <th class="p-4">Action</th>
+        </tr>`;    
   }
+
 
   expenses.forEach(exp => {
     expenseBody.insertAdjacentHTML("beforeend", `

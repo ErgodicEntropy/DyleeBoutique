@@ -3,6 +3,7 @@ let productId = JSON.parse(localStorage.getItem("productId")) || 0; // Fix Produ
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
 
+const productHead = document.getElementById("productHead");
 const productBody = document.getElementById("productBody");
 const cardContainer = document.getElementById("cardContainer");
 
@@ -12,7 +13,6 @@ const cardBtn = document.getElementById("cardBtn");
 const tableDiv = document.getElementById("tableDiv");
 const cardDiv = document.getElementById("cardDiv");
 
-const startTr = document.getElementById("columns");
 
 const downloadBtn = document.getElementById("downloadBtn");
 const exportBtn = document.getElementById("exportBtn");
@@ -57,22 +57,50 @@ reader.readAsDataURL(file);
 function renderTable(){
 
 productBody.innerHTML = "";
-
 if(products.length === 0){
+  productBody.innerHTML = `
+    <div class="col-span-full flex flex-col items-center justify-center text-center bg-white p-10 rounded-xl shadow">
+    
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        class="w-16 h-16 text-gray-300 mb-4"
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M17 20h5V4H2v16h5m10 0v-6a3 3 0 00-6 0v6m6 0H7"/>
+      </svg>
 
-productBody.innerHTML = `
-<tr>
-<td colspan="9" class="p-6 text-center text-gray-500">
-No products yet
-</td>
-</tr>
-`;
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">
+        No Products Yet
+      </h2>
 
-return;
+      <p class="text-gray-500 text-sm mb-5 max-w-sm">
+        When you add a product, its metadata will automatically appear here.
+      </p>
 
-}
+      <a href="add_product.html"
+        class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 transition">
+        Create First Product
+      </a>
 
-startTr.classList.remove("hidden");
+    </div>
+    `;
+
+    return;
+  } else {
+    productHead.innerHTML = `
+        <tr>
+          <th class="p-4">Name</th>
+          <th class="p-4">Size</th>
+          <th class="p-4">Category</th>
+          <th class="p-4">Brand</th>
+          <th class="p-4">Cost</th>
+          <th class="p-4">Estimated Price (Min)</th>
+          <th class="p-4">Market Price (Max)</th>
+          <th class="p-4">Stock</th>
+          <th class="p-4">Image</th>
+          <th class="p-4">Action</th>
+        </tr>`;    
+  }
+
 
 products.forEach(product => {
 

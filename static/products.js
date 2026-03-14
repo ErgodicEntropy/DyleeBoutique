@@ -1,5 +1,5 @@
 let products = JSON.parse(localStorage.getItem("products")) || [];
-let productId = JSON.parse(localStorage.getItem("productId")) || 0; // Fix Product ID system: decouple products of the same name into product.stock many products with the same name
+let productId = JSON.parse(localStorage.getItem("productId")) || 1; // Fix Product ID system: decouple products of the same name into product.stock many products with the same name
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
 
@@ -83,7 +83,7 @@ if(products.length === 0){
 
     </div>
     `;
-
+    productHead.classList.add("hidden");
     return;
   } else {
     productHead.innerHTML = `
@@ -99,6 +99,7 @@ if(products.length === 0){
           <th class="p-4">Image</th>
           <th class="p-4">Action</th>
         </tr>`;    
+    productHead.classList.remove("hidden");
   }
 
 
@@ -612,13 +613,14 @@ const newProduct = JSON.parse(localStorage.getItem("productdata"));
 
 if(newProduct){
 
-productId++;
-
+  
 newProduct.id = productId;
 
 products.push(newProduct);
 
 saveProducts();
+
+productId++;
 
 localStorage.removeItem("productdata");
 

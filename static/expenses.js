@@ -1,19 +1,19 @@
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-let expenseId = JSON.parse(localStorage.getItem("expenseId")) || 0;
+let expenseId = JSON.parse(localStorage.getItem("expenseId")) || 1;
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
 //product costs automatically factored
 if (products && expenseId < products.length){
     products.forEach(product => {
-        expenseId++;
-        const expense = {
-            id:expenseId, 
-            name:product.name || "", 
-            amount:Number(product.cost || 0)*Number(product.initialQuantity || 0), 
-            category: "Product Purchase"
-        }
-        expenses.push(expense);
-        saveExpenses();
+      const expense = {
+        id:expenseId, 
+        name:product.name || "", 
+        amount:Number(product.cost || 0)*Number(product.initialQuantity || 0), 
+        category: "Product Purchase"
+      }
+      expenses.push(expense);
+      expenseId++;
+      saveExpenses();
     })
 }
 const tableDiv = document.getElementById("tableDiv");

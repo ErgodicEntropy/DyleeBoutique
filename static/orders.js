@@ -1,10 +1,8 @@
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 let orderId = JSON.parse(localStorage.getItem("orderId")) || 1;
 let products = JSON.parse(localStorage.getItem("products")) || [];
+let customers = JSON.parse(localStorage.getItem("customers")) || [];
 let customerId = JSON.parse(localStorage.getItem("customerId")) || 1; 
-
-console.log(products);
-console.log(orders);
 
 const tableDiv = document.getElementById("tableDiv");
 const orderHead = document.getElementById("orderHead");
@@ -274,6 +272,9 @@ document.addEventListener("click", e => {
       });
       saveProducts(); 
       if (orderId > 0) orderId--;
+      const customerIndex = customers.findIndex(c => c.name === orders[index].customer && c.phone === orders[index].phone);
+      customers.splice(customerIndex,1);
+      localStorage.setItem("customers", JSON.stringify(customers)); 
       if (customerId > 0) customerId--; 
     // const productName = orders[index].product;
     // const product = findOrderProduct(productName);

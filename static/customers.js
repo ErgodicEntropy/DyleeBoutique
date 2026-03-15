@@ -2,6 +2,28 @@
 const orders = JSON.parse(localStorage.getItem("orders")) || [];
 const customers = JSON.parse(localStorage.getItem("customers")) || [];
 
+const collapseBtn = document.getElementById('collapseBtn'); 
+
+collapseBtn.addEventListener('click', e=>{
+  e.preventDefault();
+  const aside = collapseBtn.closest('aside');
+  aside.classList.add("hidden");
+  const main = document.querySelector('main');
+  const h1 = main.querySelector('h1');
+  const showSideBarBtn = document.createElement('button');
+  showSideBarBtn.id = "showSideBarBtn"; 
+  showSideBarBtn.textContent = "→";
+  showSideBarBtn.className ="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 font-semibold">
+  showSideBarBtn.addEventListener('click', e=>{
+    e.preventDefault();
+    aside.classList.remove("hidden");
+    showSideBarBtn.remove();
+  })
+  main.insertBefore(showSideBarBtn, h1);
+
+})
+
+
 // Group orders by customer
 let customersMap = {};
 

@@ -19,10 +19,17 @@
 <div class="flex min-h-screen">
 
 <!-- Sidebar -->
-<aside class="w-64 bg-white shadow-lg">
+  <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+      <span class="text-lg font-semibold text-gray-800 tracking-tight">
+        DyleeBoutique
+      </span>
 
-<div class="p-6 text-xl font-bold border-b">
-DyleeBoutique
+<button id="collapseBtn"
+  class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 font-semibold">
+  ←
+  </button>
+
 </div>
 
 <nav class="p-4 space-y-2">
@@ -65,16 +72,19 @@ class="text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:bg-gradie
 + Add Order
 </a>
 
+<button id="clearBtn"
+class="text-white bg-red-600 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5">
+
+Clear Table
+
+</button>
+
 
 <button id="downloadBtn"
 class="text-white bg-gradient-to-r from-blue-400 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
 Download JSON
 </button>
 
-<button id="exportBtn"
-class="text-white bg-gradient-to-r from-green-400 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
-Export CSV
-</button>
 
 <button id="exportOrders"
 class="text-white bg-gradient-to-r from-green-400 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">

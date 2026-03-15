@@ -26,7 +26,29 @@ const cardBtn = document.getElementById("cardBtn");
 
 const addExpenseBtn = document.getElementById("addExpenseBtn");
 const downloadBtn = document.getElementById("downloadBtn");
-const exportBtn = document.getElementById("exportBtn");
+const clearBtn = document.getElementById("clearBtn");
+
+const collapseBtn = document.getElementById('collapseBtn'); 
+
+collapseBtn.addEventListener('click', e=>{
+  e.preventDefault();
+  const aside = collapseBtn.closest('aside');
+  aside.classList.add("hidden");
+  const main = document.querySelector('main');
+  const h1 = main.querySelector('h1');
+  const showSideBarBtn = document.createElement('button');
+  showSideBarBtn.id = "showSideBarBtn"; 
+  showSideBarBtn.textContent = "→";
+  showSideBarBtn.className ="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 font-semibold">
+  showSideBarBtn.addEventListener('click', e=>{
+    e.preventDefault();
+    aside.classList.remove("hidden");
+    showSideBarBtn.remove();
+  })
+  main.insertBefore(showSideBarBtn, h1);
+
+})
+
 
 function saveExpenses() {
   localStorage.setItem("expenses", JSON.stringify(expenses));
@@ -98,10 +120,31 @@ function renderCards() {
 
   if (expenses.length === 0) {
     cardDiv.innerHTML = `
-      <div class="col-span-full p-6 text-center text-gray-500 bg-white rounded-xl shadow">
-        No expenses yet
-      </div>
+    <div class="col-span-full flex flex-col items-center justify-center text-center bg-white p-10 rounded-xl shadow">
+    
+      <svg xmlns="http://www.w3.org/2000/svg" 
+        class="w-16 h-16 text-gray-300 mb-4"
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M17 20h5V4H2v16h5m10 0v-6a3 3 0 00-6 0v6m6 0H7"/>
+      </svg>
+
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">
+        No Expenses Yet
+      </h2>
+
+      <p class="text-gray-500 text-sm mb-5 max-w-sm">
+        When you add a product, its expense will automatically appear under Product Purchase category.
+      </p>
+
+      <a href="add_expense.html"
+        class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 transition">
+        Create First Expense
+      </a>
+
+    </div>
     `;
+
     return;
   }
 
@@ -184,22 +227,40 @@ downloadBtn.onclick = () => {
   URL.revokeObjectURL(a.href);
 };
 
-// Export CSV
-exportBtn.onclick = () => {
-  const csv = [
-    ["ID", "Name", "Amount", "Category"],
-    ...expenses.map(exp => [exp.id, exp.name, exp.amount, exp.category])
-  ]
-    .map(row => row.join(","))
-    .join("\n");
+/* ----------------------- Clear Table ----------------------- */
 
-  const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "expenses.csv";
-  a.click();
-  URL.revokeObjectURL(a.href);
-};
+clearBtn.onclick = () =>{
+  Swal.fire({
+    title:"Clear Table",
+    html:`<p> Are you sure you want to <strong>clear</strong> your table ? 
+      <br>
+      All your data will be gone!
+    </p>`,
+    showConfirmButton: true,
+    confirmButtonText: "Confirm",
+  }).then(()=>{
+    try {
+      localStorage.removeItem('expenseId');
+      localStorage.removeItem('expenses');
+      renderTable();
+      Swal.fire({
+        icon:"success",
+        text:"Table Cleared",
+        title:"Table",
+        timer:2000,
+        timerProgressBar:true
+      })
+    }catch(err){
+      Swal.fire({
+        icon:"error",
+        text:err.message,
+        title:"Oops...",
+        timer:2000,
+        timerProgressBar:true
+      })
+    }
+  })
+}
 
 // Initial render
 document.addEventListener("DOMContentLoaded", () => {

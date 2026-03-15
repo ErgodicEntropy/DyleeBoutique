@@ -2,7 +2,6 @@
 A small e-commerce project for my sister
 
 # To Do
-- Complete Dashboard
 - FIX ALL INTERDEPENDENCE ISSUES BETWEEN ENTITIES: Product->Order, Product->Expense, Order->Customer, Dashboard->Order*Customer
 - Orders PDF-JSON File upload problem
 - Products PDF-JSON File upload problem

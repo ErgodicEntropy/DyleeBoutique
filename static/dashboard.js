@@ -79,16 +79,41 @@ function computeProductPrices(orders){
 }
 
 
-const finance = document.getElementById('financialChart');
-const orderChart = document.getElementById("ordersChart");
+const finance = document.getElementById('financialChart').getContext("2d");
+const orderChart = document.getElementById("ordersChart").getContext("2d");
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  const collapseBtn = document.getElementById('collapseBtn'); 
+
+  collapseBtn.addEventListener('click', e=>{
+    e.preventDefault();
+    const aside = collapseBtn.closest('aside');
+    aside.classList.add("hidden");
+    const main = document.querySelector('main');
+    const h1 = main.querySelector('h1');
+    const showSideBarBtn = document.createElement('button');
+    showSideBarBtn.id = "showSideBarBtn"; 
+    showSideBarBtn.textContent = "→";
+    showSideBarBtn.className ="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 font-semibold">
+    showSideBarBtn.addEventListener('click', e=>{
+      e.preventDefault();
+      aside.classList.remove("hidden");
+      showSideBarBtn.remove();
+    })
+    main.insertBefore(showSideBarBtn, h1);
+
+  })
+
 
   const orders = JSON.parse(localStorage.getItem("orders")) || [];
   // const products = JSON.parse(localStorage.getItem("products")) || [];
   const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
   const customers = JSON.parse(localStorage.getItem("customers")) || [];
 
+  let revenueArr = JSON.parse(localStorage.getItem("revenueArr")) || [];
+  let expenseArr = JSON.parse(localStorage.getItem("expenseArr")) || [];
+  let profitArr = JSON.parse(localStorage.getItem("profitArr")) || [];
 
   const totalOrders = orders.length;
   const deliveredOrders = orders.filter(o => o.status === "Confirmed"); // Delivered = Confirmed = Shipped = Received
@@ -97,9 +122,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Revenue & Expenses
   const revenue = deliveredOrders.reduce((sum,o)=>sum+Number(o.price||0),0);
+  revenueArr.push(revenue);
+  localStorage.setItem('revenueArr', JSON.stringify(revenueArr));
 
   const expensesTotal = expenses.reduce((sum,e)=>sum+Number(e.amount||0),0)
+  expenseArr.push(expensesTotal);
+  localStorage.setItem('expenseArr', JSON.stringify(expenseArr));
+
   const profit = revenue - expensesTotal;
+  console.log(profitArr)
+  profitArr.push(profit);
+  localStorage.setItem('profitArr', JSON.stringify(profitArr));
 
   const deliveredRate = totalOrders === 0 ? 0 : ((deliveredOrders.length / totalOrders) * 100).toFixed(2);
   const pendingRate = totalOrders === 0 ? 0 : ((pendingOrders.length / totalOrders) * 100).toFixed(2);
@@ -264,60 +297,59 @@ document.addEventListener("DOMContentLoaded", () => {
   const LTV = customers.map(customer => customer.spent).reduce((sum,a)=>sum+a,0);
   lifetimeValue.textContent = LTV;
 
-
   // Revenue / Expenses / Profit chart
-  // const financialChart = new Chart(finance, {
-  //   type: 'line',
-  //   data: {
-  //     labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], //or ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
-  //     dataset: [
-  //       {
-  //         label: "Revenue",
-  //         data: [revenue],
-  //         borderColor: "#14b8a6",
-  //         backgroundColor:"rgba(20,184,166,0.2)",
-  //         tension:0.5,
-  //         fill: false
-  //       },
-  //       {
-  //         label: "Expense",
-  //         data: [expensesTotal],
-  //         borderColor:"#f87171",
-  //         backgroundColor:"rgba(248,113,113,0.2)",
-  //         tension:0.5,
-  //         fill: false
-  //       },
-  //       {
-  //         label: "Profit",
-  //         data: [profit],
-  //         borderColor:"#60a5fa",
-  //         backgroundColor:"rgba(96,165,250,0.2)",
-  //         tension:0.5,
-  //         fill:false
-  //       }
-  //     ]
-  //   },
-  //   options:{ responsive:true, plugins:{ legend:{ position:"top" } } }
+  const financialChart = new Chart(finance, {
+    type: 'line',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], //or ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
+      datasets: [
+        {
+          label: "Revenue",
+          data: revenueArr,
+          borderColor: "#14b8a6",
+          backgroundColor:"rgba(20,184,166,0.2)",
+          tension:0.5,
+          fill: false
+        },
+        {
+          label: "Expense",
+          data: expenseArr,
+          borderColor:"#f87171",
+          backgroundColor:"rgba(248,113,113,0.2)",
+          tension:0.5,
+          fill: false
+        },
+        {
+          label: "Profit",
+          data: profitArr,
+          borderColor:"#60a5fa",
+          backgroundColor:"rgba(96,165,250,0.2)",
+          tension:0.5,
+          fill:false
+        }
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{ position:"top" } } }
 
-  // })
+  })
 
-  // // Orders by weekday
-  // const ordersByDay = {Mon:0,Tue:0,Wed:0,Thu:0,Fri:0,Sat:0,Sun:0};
-  // const dayMap = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  // orders.forEach(o => ordersByDay[dayMap[new Date(o.date).getDay()]]++);
-  // const ordersChart = new Chart(orderChart, {
-  //   type: 'bar',
-  //   data: {
-  //     labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-  //     datasets:[{
-  //       label:'Orders',
-  //       data: Object.values(ordersByDay),
-  //       borderColor: "#14b8a6",
-  //       backgroundColor:'#0ea5e9'
-  //     }]
-  //   },
-  //   options:{ responsive:true }
-  // })
+  // Orders by weekday
+  const ordersByDay = {Mon:0,Tue:0,Wed:0,Thu:0,Fri:0,Sat:0,Sun:0};
+  const dayMap = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  orders.forEach(o => ordersByDay[dayMap[new Date(o.date).getDay()]]++);
+  const ordersChart = new Chart(orderChart, {
+    type: 'bar',
+    data: {
+      labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets:[{
+        label:'Orders',
+        data: Object.values(ordersByDay),
+        borderColor: "#14b8a6",
+        backgroundColor:'#0ea5e9'
+      }]
+    },
+    options:{ responsive:true }
+  })
 
 
 

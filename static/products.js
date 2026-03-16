@@ -1,7 +1,11 @@
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let productId = JSON.parse(localStorage.getItem("productId")) || 1; // Fix Product ID system: decouple products of the same name into product.stock many products with the same name
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
+let orderId = JSON.parse(localStorage.getItem("orderId")) || 1;
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+let expenseId = JSON.parse(localStorage.getItem("expenseId")) || 1;
+let customerId = JSON.parse(localStorage.getItem("customerId")) || 1; 
+
 
 
 const productHead = document.getElementById("productHead");
@@ -351,7 +355,7 @@ function openUpdateModal(product){
 
 const affectedOrders = orders.filter(order => isOrderProduct(product,order)); //find all orders affected by changes in the current product before such changes take place (save)
 
-const affectedExpenses = expenses.filter(expense => expense.name === product.name); //find all expenses affected by changes in the current product before such changes take place (save)
+const affectedExpenses = expenses.filter(expense => expense.productId === product.id); //find all expenses affected by changes in the current product before such changes take place (save)
 
 let oldname = product.name;
 
@@ -426,6 +430,10 @@ product.price = document.getElementById("price").value;
 
 product.stock = document.getElementById("stock").value;
 
+product.initialStock = (!orders.some(order => isOrderProduct(product, order))) ? document.getElementById("stock").value: product.initialStock;
+
+let stockCounter = Number(product.initialStock || 0) + Number(orders.filter(order => isOrderProduct(product, order)).map(order => order.products.quantity).reduce((sum,c)=>sum + c,0) || 0);
+
 const file = document.getElementById("image").files[0];
 
 if(file){
@@ -434,7 +442,7 @@ product.image = await readImage(file);
 
 }
 
-affectedOrders.forEach(affectedOrder => {//forEach makes implicit assignemnts -> no need to make changes on orders array because affectedOrder is a reference to orders object elements (deep copy in case of compounded data type: same memory address)
+affectedOrders.forEach(affectedOrder => {//forEach makes implicit assignments -> no need to make changes on orders array because affectedOrder is a reference to orders object elements (deep copy in case of compounded data type: same memory address)
   affectedOrder.products.forEach(productObj => {
     if (productObj.product === oldname){
       productObj.product = product.name;
@@ -445,7 +453,8 @@ saveOrders();
 
 affectedExpenses.forEach(affectedExpense =>{//forEach makes implicit assignemnts -> no need to make changes on expenses array because affectedExpense is a reference to expenses object elements (deep copy in case of compounded data type: same memory address)
   affectedExpense.name = product.name;
-  affectedExpense.amount = Number(product.cost || 0)*Number(product.initialQuantity || 0);  
+  affectedExpense.amount = Number(product.cost || 0)*(Number(product.stock || 0) + orders.filter(order => isOrderProduct(product, order)).map(order => order.products.quantity).reduce((sum,c)=>sum + c,0));
+  affectedExpense.details = `(${product.cost}DH x ${stockCounter})`;
 })
 
 saveExpenses();
@@ -538,16 +547,21 @@ productBody.addEventListener("click", e => {
 
     affectedOrders.forEach(affectedOrder => {//forEach makes implicit assignemnts -> no need to make changes on orders array because affectedOrder is a reference to orders object elements (deep copy in case of compounded data type: same memory address)
       orders = orders.filter(o => o.id != affectedOrder.id);
+      orderId--;
     })
     saveOrders();
 
-    const affectedExpenses = expenses.filter(expense => expense.name === product.name); //find all expenses affected by changes in the current product before such changes take place (save)
+    const affectedExpenses = expenses.filter(expense => expense.productId === product.id); //find all expenses affected by changes in the current product before such changes take place (save)
     affectedExpenses.forEach(affectedExpense =>{
       expenses = expenses.filter(e => e.id != affectedExpense.id);
+      expenseId--;
     })
     saveExpenses();
+    
     // products.splice(products.indexOf(product),1);
     products = products.filter(p => p.id !== id);
+
+    productId--; 
 
     saveProducts();
 
@@ -577,15 +591,28 @@ if(e.target.classList.contains("deleteBtn")){
 
 const id = Number(e.target.dataset.id);
 
+const product = products.find(p => p.id === id);
+
 const affectedOrders = orders.filter(order => isOrderProduct(product, order)); //find all orders affected by changes in the current product before such changes take place (save)
 
 affectedOrders.forEach(affectedOrder => {//forEach makes implicit assignemnts -> no need to make changes on orders array because affectedOrder is a reference to orders object elements (deep copy in case of compounded data type: same memory address)
   orders = orders.filter(o => o.id != affectedOrder.id);
+  orderId--; 
 })
 saveOrders();
 
+const affectedExpenses = expenses.filter(expense => expense.productId === product.id); //find all expenses affected by changes in the current product before such changes take place (save)
+
+affectedExpenses.forEach(affectedExpense => {
+  expenses = expenses.filter(e => e.id != affectedExpense.id); 
+  expenseId--;
+})
+
+saveExpenses(); 
 
 products = products.filter(p => p.id !== id);
+
+productId--; 
 
 saveProducts();
 
@@ -676,7 +703,7 @@ clearBtn.onclick = () =>{
       localStorage.removeItem('customers');
       localStorage.removeItem('expenseId');
       localStorage.removeItem('expenses');
-      renderTable();
+      window.location.reload();
       Swal.fire({
         icon:"success",
         text:"Table Cleared",

@@ -1,7 +1,7 @@
 // Add Expense Handling
 const form = document.querySelector("form");
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-let expenseId = JSON.parse(localStorage.getItem("expenseId")) || 0;
+let expenseId = JSON.parse(localStorage.getItem("expenseId")) || 1;
 
 function saveExpenses() {
   localStorage.setItem("expenses", JSON.stringify(expenses));
@@ -27,14 +27,14 @@ form.addEventListener("submit", (e) => {
     });
     return;
   }
-  expenseId++;
   const data = {
     id: expenseId,
     name:name,
     amount:amount,
     category:category 
-    };
+  };
   expenses.push(data);
+  expenseId++;
   saveExpenses();
 
   Swal.fire({

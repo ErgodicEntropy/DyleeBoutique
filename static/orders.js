@@ -428,7 +428,7 @@ clearBtn.onclick = () =>{
       localStorage.removeItem('orders');
       localStorage.removeItem('customerId');
       localStorage.removeItem('customers');
-      renderTable();
+      window.location.reload();
       Swal.fire({
         icon:"success",
         text:"Table Cleared",

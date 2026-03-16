@@ -3,17 +3,21 @@ let expenseId = JSON.parse(localStorage.getItem("expenseId")) || 1;
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
 //product costs automatically factored
-if (products && expenseId < products.length){
+if (products){
     products.forEach(product => {
-      const expense = {
-        id:expenseId, 
-        name:product.name || "", 
-        amount:Number(product.cost || 0)*Number(product.initialQuantity || 0), 
-        category: "Product Purchase"
-      }
-      expenses.push(expense);
-      expenseId++;
-      saveExpenses();
+      if (!expenses.some(expense => expense.productId === product.id)){
+        const expense = {
+          id:expenseId,
+          productId: product.id,  
+          name:product.name || "", 
+          amount:Number(product.cost || 0)*Number(product.initialStock || 0), 
+          details:`(${product.cost}DH x ${product.initialStock})`,
+          category: "Product Purchase"
+        }
+        expenses.push(expense);
+        expenseId++;
+        saveExpenses();
+      } 
     })
 }
 const tableDiv = document.getElementById("tableDiv");
@@ -91,7 +95,7 @@ function renderTable() {
           <tr>
             <th class="p-4">ID</th>
             <th class="p-4">Name</th>
-            <th class="p-4">Amount</th>
+            <th class="p-4">Total Amount</th>
             <th class="p-4">Category</th>
             <th class="p-4">Action</th>
         </tr>`;    
@@ -103,7 +107,7 @@ function renderTable() {
       <tr class="border-t hover:bg-gray-50 transition">
         <td class="p-4 font-medium">${exp.id}</td>
         <td class="p-4 font-semibold">${exp.name}</td>
-        <td class="p-4 font-semibold">${exp.amount} DH</td>
+        <td class="p-4 font-semibold">${exp.amount} DH ${exp.details}</td>
         <td class="p-4">${exp.category}</td>
         <td class="p-4 flex gap-2">
           <button data-id="${exp.id}" class="editBtn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">Edit</button>
@@ -171,8 +175,8 @@ document.addEventListener("click", e => {
   const index = expenses.findIndex(exp => exp.id === id);
 
   if (e.target.classList.contains("deleteBtn")) {
-    expenseId--;
     expenses.splice(index, 1);
+    expenseId--;
     saveExpenses();
     renderTable();
     renderCards();
@@ -242,7 +246,7 @@ clearBtn.onclick = () =>{
     try {
       localStorage.removeItem('expenseId');
       localStorage.removeItem('expenses');
-      renderTable();
+      window.location.reload();
       Swal.fire({
         icon:"success",
         text:"Table Cleared",
@@ -264,6 +268,5 @@ clearBtn.onclick = () =>{
 
 // Initial render
 document.addEventListener("DOMContentLoaded", () => {
-  console.log(expenses);
   renderTable();
 });

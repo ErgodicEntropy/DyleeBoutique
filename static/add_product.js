@@ -51,7 +51,7 @@ productForm.addEventListener('submit', async (e) => {
       price: price.value.trim(),
       stock: stock.value.trim(),
       image: image,
-      initialQuantity: stock.value.trim() //used to count expenses only
+      initialStock: stock.value.trim() //used to count expenses only
     };
 
     if (!data){

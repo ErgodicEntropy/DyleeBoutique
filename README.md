@@ -2,7 +2,6 @@
 A small e-commerce project for my sister
 
 # To Do
-- FIX ALL INTERDEPENDENCE ISSUES BETWEEN ENTITIES: Product->Order, Product->Expense, Order->Customer, Dashboard->Order*Customer
 - Orders PDF-JSON File upload problem
 - Products PDF-JSON File upload problem
 - Order many different products at once -> association class (quantity attribute) to capture N-N group by => create junction table or relation (or bi-allocate foreign keys) -> no need for a junction table or forein keys bi-allocation because we used compounded data values, forbidden in databases, in the table to avoid reference overhead

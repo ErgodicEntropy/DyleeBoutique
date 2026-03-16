@@ -355,7 +355,7 @@ function openUpdateModal(product){
 
 const affectedOrders = orders.filter(order => isOrderProduct(product,order)); //find all orders affected by changes in the current product before such changes take place (save)
 
-const affectedExpenses = expenses.filter(expense => expense.productId === product.id); //find all expenses affected by changes in the current product before such changes take place (save)
+const affectedExpenses = expenses.filter(expense => expense.productId === product.id); //find the one expense affected by changes in the current product before such changes take place (save)
 
 let oldname = product.name;
 

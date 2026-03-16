@@ -52,6 +52,12 @@ orders.forEach(order => {
       customersMap[key.value].receivedOrders += 1;
       customersMap[key.value].spent += Number(order.price) || 0;
     }
+
+    if (order.status === "Canceled") {
+      if (customersMap[key.value].receivedOrders > 0) customersMap[key.value].receivedOrders -= 1;
+      if (customersMap[key.value].spent > 0) customersMap[key.value].spent -= Number(order.price) || 0;
+    }
+
     if (!customers.some(c => c.name === customersMap[key.value].name && c.phone === customersMap[key.value].phone)){ //since include method compares by reference in case of compounded data type (object), we use some method to divide-and-conquer, compare primitive data type (forming composite key) by value, and then aggregate boolean value
       customers.push(customersMap[key.value]);
     }

@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     
+    const welcome = document.getElementById("welcomeSpan");
+    welcome.textContent = user.firstName;
+    
     const es = document.getElementById('emailSpan');
     es.textContent = user.email;
 

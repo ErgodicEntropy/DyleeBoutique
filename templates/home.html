@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome Back! · DyleeBoutique</title>
+    <script src="/static/home.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes float {
@@ -45,7 +47,7 @@
                 </svg>
             </div>
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Welcome back, <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">John!</span>
+                Welcome, <span id="welcomeSpan" class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent"></span>
             </h1>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                 Your e-commerce command center is ready. Let's make today productive.

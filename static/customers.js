@@ -60,6 +60,9 @@ orders.forEach(order => {
 
     if (!customers.some(c => c.name === customersMap[key.value].name && c.phone === customersMap[key.value].phone)){ //since include method compares by reference in case of compounded data type (object), we use some method to divide-and-conquer, compare primitive data type (forming composite key) by value, and then aggregate boolean value
       customers.push(customersMap[key.value]);
+    } else {
+      const index = customers.findIndex(c => c.name === customersMap[key.value].name && c.phone === customersMap[key.value].phone)
+      if (index !== -1) customers[index] = customersMap[key.value];
     }
 
   } else {

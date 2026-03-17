@@ -78,6 +78,18 @@ function computeProductPrices(orders){
 
 }
 
+function CantorPair(arr){
+  if (arr.length === 0) return undefined;
+  if (arr.length === 1) return arr[0]; 
+  const firstObjectId = arr[0];
+  const secondObjectId = arr[1];
+  let identifier = (firstObjectId + secondObjectId)*(firstObjectId + secondObjectId + 1)/2 + secondObjectId; 
+  for (let k = 2; k < arr.length; k++){
+    const ObjectId = arr[k];
+    identifier = (identifier + ObjectId)*(identifier + ObjectId + 1)/2 + ObjectId; 
+  }
+  return identifier; 
+}
 
 const finance = document.getElementById('financialChart').getContext("2d");
 const orderChart = document.getElementById("ordersChart").getContext("2d");
@@ -111,9 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
   const customers = JSON.parse(localStorage.getItem("customers")) || [];
 
-  let revenueArr = JSON.parse(localStorage.getItem("revenueArr")) || [];
-  let expenseArr = JSON.parse(localStorage.getItem("expenseArr")) || [];
-  let profitArr = JSON.parse(localStorage.getItem("profitArr")) || [];
+  let revenueArr = JSON.parse(localStorage.getItem("revenueArr")) || [{value: 0, identifier: null}];
+  let expenseArr = JSON.parse(localStorage.getItem("expenseArr")) || [{value: 0, identifier: null}];
+  let profitArr = JSON.parse(localStorage.getItem("profitArr")) || [{value: 0, identifier: null}];
 
   const totalOrders = orders.length;
   const deliveredOrders = orders.filter(o => o.status === "Confirmed"); // Delivered = Confirmed = Shipped = Received
@@ -122,17 +134,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Revenue & Expenses
   const revenue = deliveredOrders.reduce((sum,o)=>sum+Number(o.price||0),0);
-  revenueArr.push(revenue);
-  localStorage.setItem('revenueArr', JSON.stringify(revenueArr));
+  console.log("delivered orders", deliveredOrders);
+  console.log("delivered orders ids", deliveredOrders.map(o => o.id));
+  const revenueObj = {
+    value: revenue,
+    identifier: CantorPair(deliveredOrders.map(o => o.id)) //Cantor pairing function to produce a unique number from two integers
+  }
+  if (!revenueArr.some(ro => ro.identifier == revenueObj.identifier)){
+    revenueArr.push(revenueObj);
+    localStorage.setItem('revenueArr', JSON.stringify(revenueArr));
+  }
 
   const expensesTotal = expenses.reduce((sum,e)=>sum+Number(e.amount||0),0)
-  expenseArr.push(expensesTotal);
-  localStorage.setItem('expenseArr', JSON.stringify(expenseArr));
+  const expenseObj = {
+    value: expensesTotal,
+    identifier: CantorPair(expenses.map(e => e.id)) //Cantor pairing function to produce a unique number from two integers
+  }
+  if (!expenseArr.some(eo => eo.identifier == expenseObj.identifier)){
+    expenseArr.push(expenseObj);
+    localStorage.setItem('expenseArr', JSON.stringify(expenseArr));
+  }
 
   const profit = revenue - expensesTotal;
-  console.log(profitArr)
-  profitArr.push(profit);
-  localStorage.setItem('profitArr', JSON.stringify(profitArr));
+  const profitObj = {
+    value: profit,
+    identifier: CantorPair([...deliveredOrders.map(o => o.id), ...expenses.map(e => e.id)])
+  }
+  if (!profitArr.some(po => po.identifier == profitObj.identifier)){
+    profitArr.push(profitObj);
+    localStorage.setItem('profitArr', JSON.stringify(profitArr));
+  }
 
   const deliveredRate = totalOrders === 0 ? 0 : ((deliveredOrders.length / totalOrders) * 100).toFixed(2);
   const pendingRate = totalOrders === 0 ? 0 : ((pendingOrders.length / totalOrders) * 100).toFixed(2);
@@ -142,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Update metrics
   document.getElementById("income").textContent = "MAD " + revenue;
   document.getElementById("expenses").textContent = "MAD " + expensesTotal;
+  document.getElementById("profit").className = (profit <= 0) ? "text-2xl font-bold text-red-600":"text-2xl font-bold text-green-600";
   document.getElementById("profit").textContent = "MAD " + profit;
   document.getElementById("totalOrders").textContent = totalOrders;
   document.getElementById("delivered").textContent = deliveredOrders.length;
@@ -297,33 +329,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const LTV = customers.map(customer => customer.spent).reduce((sum,a)=>sum+a,0);
   lifetimeValue.textContent = LTV;
 
+  console.log(customers);
+
   // Revenue / Expenses / Profit chart
   const financialChart = new Chart(finance, {
     type: 'line',
     data: {
-      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], //or ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
+      labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], //or ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
       datasets: [
         {
           label: "Revenue",
-          data: revenueArr,
-          borderColor: "#14b8a6",
-          backgroundColor:"rgba(20,184,166,0.2)",
+          data: revenueArr.map(revObj => revObj.value),
+          borderColor: "#1424b8",
           tension:0.5,
           fill: false
         },
         {
           label: "Expense",
-          data: expenseArr,
+          data: expenseArr.map(expObj => expObj.value),
           borderColor:"#f87171",
-          backgroundColor:"rgba(248,113,113,0.2)",
           tension:0.5,
           fill: false
         },
         {
           label: "Profit",
-          data: profitArr,
+          data: profitArr.map(profitObj => profitObj.value),
           borderColor:"#60a5fa",
-          backgroundColor:"rgba(96,165,250,0.2)",
           tension:0.5,
           fill:false
         }

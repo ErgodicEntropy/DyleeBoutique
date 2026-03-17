@@ -61,6 +61,11 @@ function isOrderProduct(product, order){//checks whether a given product is chec
   return order.products.some(productObj => productObj.product === product.name);
 }
 
+function sumProductQuantity(product, order){
+  const productObj = order.products.find(productObj => productObj.product === product.name)
+  if (!productObj) return 0; 
+  return productObj.quantity;
+}
 
 /* ----------------------- IMAGE ----------------------- */
 
@@ -146,17 +151,41 @@ productBody.insertAdjacentHTML("beforeend",`
 
 <tr id="tr-${product.id}" class="border-t">
 
-<td class="p-4">${product.name}</td>
+<td class="${
+product.stock > 0
+? "p-4 font-semibold"
+: "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+}">${product.name}</td>
 
-<td class="p-4">${product.size}</td>
+<td class="${
+product.stock > 0
+? "p-4 font-semibold"
+: "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+}">${product.size}</td>
 
-<td class="p-4">${product.category}</td>
+<td class="${
+product.stock > 0
+? "p-4 font-semibold"
+: "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+}">${product.category}</td>
 
-<td class="p-4">${product.brand}</td>
+<td class="${
+product.stock > 0
+? "p-4 font-semibold"
+: "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+}">${product.brand}</td>
 
-<td class="p-4">${product.cost}DH</td>
+<td class="${
+product.stock > 0
+? "p-4 font-semibold"
+: "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+}">${product.cost}DH</td>
 
-<td class="p-4">${product.price}DH</td>
+<td class="${
+product.stock > 0
+? "p-4 font-semibold"
+: "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+}">${product.price}DH</td>
 
 <td class="p-4">
  <a href="https://www.marjanemall.ma/catalogsearch/result?q=${product.name}" target="_blank"
@@ -280,7 +309,7 @@ ${product.name}
 <span class="${
 product.stock > 0
 ? "text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold"
-: "text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold"
+: "text-xs px-2 py-1 rounded-full bg-red-200 text-red-600 font-semibold"
 }">
 
 ${product.stock > 0 ? "Available" : "Out of Stock"}
@@ -359,6 +388,8 @@ const affectedExpenses = expenses.filter(expense => expense.productId === produc
 
 let oldname = product.name;
 
+let oldstock = product.stock; 
+
 const overlay = document.createElement("div");
 
 overlay.className =
@@ -432,7 +463,9 @@ product.stock = document.getElementById("stock").value;
 
 product.initialStock = (!orders.some(order => isOrderProduct(product, order))) ? document.getElementById("stock").value: product.initialStock;
 
-let stockCounter = Number(product.initialStock || 0) + Number(orders.filter(order => isOrderProduct(product, order)).map(order => order.products.quantity).reduce((sum,c)=>sum + c,0) || 0);
+let stockCounter = (!orders.some(order => isOrderProduct(product, order))) ? Number(product.initialStock || 0): Number(product.stock || 0) + Number(orders.map(order => sumProductQuantity(product,order)).reduce((sum,c)=>sum + c,0) || 0);
+
+// let stockCounter = (!orders.some(order => isOrderProduct(product, order))) ? Number(product.initialStock || 0):Number(product.initialStock || 0) + Number(product.stock || 0) - Number(oldstock || 0); //using a proxy for order tracking: initialStock - oldstock (stock before current edit) but this proxy has a broken edge case
 
 const file = document.getElementById("image").files[0];
 
@@ -453,7 +486,7 @@ saveOrders();
 
 affectedExpenses.forEach(affectedExpense =>{//forEach makes implicit assignemnts -> no need to make changes on expenses array because affectedExpense is a reference to expenses object elements (deep copy in case of compounded data type: same memory address)
   affectedExpense.name = product.name;
-  affectedExpense.amount = Number(product.cost || 0)*(Number(product.stock || 0) + orders.filter(order => isOrderProduct(product, order)).map(order => order.products.quantity).reduce((sum,c)=>sum + c,0));
+  affectedExpense.amount = Number(product.cost || 0)*stockCounter;
   affectedExpense.details = `(${product.cost}DH x ${stockCounter})`;
 })
 

@@ -120,6 +120,9 @@ function renderTable() {
         priceMessage = "Price below minimum selling price (risk)";
     }
 
+    if (order.status === "Canceled"){
+      priceClass = "p-4 font-semibold text-red-600 text-decoration-line: line-through"
+    }
     // const productName = order.product;
     // const product = findOrderProduct(productName);
     // let priceClass = "p-4 font-semibold text-green-600";
@@ -152,17 +155,49 @@ function renderTable() {
       "beforeend",
       `
       <tr class="border-t hover:bg-gray-50 transition">
-        <td class="p-4 font-medium text-gray-700">${order.id}</td>
-        <td class="p-4 font-semibold text-gray-800">${order.customer}</td>
-        <td class="p-4 text-gray-600">${order.phone}</td>
-        <td class="p-4 text-gray-500">${order.date}</td>
-        <td class="p-4 text-gray-700">
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 font-medium text-gray-700"
+          }">${order.id}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 font-semibold text-gray-800"
+          }">${order.customer}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 text-gray-800"
+          }">${order.phone}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 text-gray-800"
+          }">${order.date}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 text-gray-800"
+          }">
           ${selectedProducts.map(item => `${item.product} (${item.quantity})`).join(", ")}
         </td>
-        <td class="p-4 text-gray-700">${totalQuantity}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 text-gray-800"
+          }">${totalQuantity}</td>
         <td class="${priceClass}" title="${priceMessage}">${order.price}DH</td>
-        <td class="p-4 text-gray-600">${order.city}</td>
-        <td class="p-4 text-gray-600">${order.address}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 text-gray-800"
+          }">${order.city}</td>
+        <td class="${
+          order.status === 'Canceled'
+          ? "p-4 text-red-600 font-semibold text-decoration-line: line-through"
+          : "p-4 text-gray-800"
+          }">${order.address}</td>
         <td class="p-4">
           <span class="text-xs font-semibold px-3 py-1 rounded-full ${statusClass}">
             ${order.status}
@@ -254,10 +289,21 @@ function renderCards() {
         priceMessage = "Price below minimum selling price (risk)";
     }
 
-    const statusClass =
-      order.status === "Confirmed"
-        ? "bg-green-100 text-green-700"
-        : "bg-yellow-100 text-yellow-700";
+    let statusClass;
+
+    switch(order.status){
+      case "Confirmed":
+        statusClass = "bg-green-100 text-green-700";
+        break;
+      case "Pending":
+        statusClass = "bg-yellow-100 text-yellow-700";
+        break;
+      case "Canceled":
+        statusClass = "bg-red-100 text-red-600"
+        break;
+      default:
+        statusClass = "bg-yellow-100 text-yellow-700";
+    }
 
     const toggleText = order.status === "Confirmed" ? "Unconfirm" : "Confirm";
 

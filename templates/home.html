@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Back! · DyleeBoutique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Simple navigation bar -->
+    <nav class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center text-white font-bold text-lg">D</div>
+                    <span class="ml-2 text-xl font-semibold text-gray-800">DyleeBoutique</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="emailSpan" class="text-sm text-gray-600"></span>
+                    <img id="imageSpan" alt="Profile" class="w-8 h-8 rounded-full border-2 border-emerald-100">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main welcome content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Welcome header -->
+        <div class="text-center mb-12">
+            <div class="inline-block p-3 bg-emerald-100 rounded-full mb-4 float-animation">
+                <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Welcome back, <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">John!</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Your e-commerce command center is ready. Let's make today productive.
+            </p>
+        </div>
+
+        <!-- Stats overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">Today's Orders</h3>
+                    <span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-semibold">+12%</span>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">24</p>
+                <p class="text-xs text-gray-400 mt-2">vs 21 yesterday</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">Pending Messages</h3>
+                    <span class="text-amber-600 bg-amber-50 px-2 py-1 rounded-full text-xs font-semibold">3 urgent</span>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">12</p>
+                <p class="text-xs text-gray-400 mt-2">Avg response: 5min</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">Revenue Today</h3>
+                    <span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-semibold">+8%</span>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">$1,482</p>
+                <p class="text-xs text-gray-400 mt-2">Est. $3.2k today</p>
+            </div>
+        </div>
+
+        <!-- Start button and quick actions -->
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-lg border border-gray-100 mb-12">
+            <div class="text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                    Ready to manage your business?
+                </h2>
+                <p class="text-gray-600 mb-8 max-w-xl mx-auto">
+                    Access your dashboard to manage orders, respond to customers, and track performance.
+                </p>
+                
+                <!-- Large start button -->
+                <div class="flex flex-col items-center">
+                    <a href="/templates/dashboard.html" class="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-500 rounded-full hover:from-emerald-700 hover:to-teal-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <span>🚀 Start your session</span>
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                    <p class="text-sm text-gray-400 mt-4">
+                        Your dashboard loads in seconds ⚡
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick action cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <a href="/orders" class="bg-white p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition group">
+                <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center mb-3 group-hover:bg-emerald-100">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-900">Orders</h3>
+                <p class="text-xs text-gray-500">View and manage</p>
+            </a>
+            
+            <a href="/messages" class="bg-white p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition group">
+                <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center mb-3 group-hover:bg-emerald-100">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-900">Messages</h3>
+                <p class="text-xs text-gray-500">WhatsApp & calls</p>
+            </a>
+            
+            <a href="/analytics" class="bg-white p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition group">
+                <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center mb-3 group-hover:bg-emerald-100">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-900">Analytics</h3>
+                <p class="text-xs text-gray-500">Performance</p>
+            </a>
+            
+            <a href="/settings" class="bg-white p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition group">
+                <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center mb-3 group-hover:bg-emerald-100">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-900">Settings</h3>
+                <p class="text-xs text-gray-500">Preferences</p>
+            </a>
+        </div>
+
+        <!-- Recent activity (optional) -->
+        <div class="mt-12 bg-white rounded-2xl p-6 border border-gray-100">
+            <h3 class="font-semibold text-gray-900 mb-4">Recent activity</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between py-2 border-b border-gray-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        <span class="text-sm text-gray-600">Order #12345 confirmed</span>
+                    </div>
+                    <span class="text-xs text-gray-400">2 min ago</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span class="text-sm text-gray-600">New WhatsApp message from Sarah</span>
+                    </div>
+                    <span class="text-xs text-gray-400">15 min ago</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
+                        <span class="text-sm text-gray-600">Payment received for order #12344</span>
+                    </div>
+                    <span class="text-xs text-gray-400">1 hour ago</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Simple footer -->
+    <footer class="bg-white border-t border-gray-100 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <p class="text-center text-sm text-gray-500">
+                © 2025 DyleeBoutique. All rights reserved.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -6,6 +6,8 @@
 
 <title>DyleeBoutique - Sign Up</title>
 
+<script src="/static/signup.js"></script>
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
@@ -32,13 +34,27 @@ Start managing your boutique with DyleeBoutique
 
 <div>
 <label class="block text-sm font-medium text-gray-600 mb-1">
-Full Name
+First Name
 </label>
 
 <input
+id="firstname"
 name="name"
 type="text"
-placeholder="John Doe"
+placeholder="John"
+class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+</div>
+
+<div>
+<label class="block text-sm font-medium text-gray-600 mb-1">
+Last Name
+</label>
+
+<input
+id="lastname"
+name="name"
+type="text"
+placeholder="Doe"
 class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none">
 </div>
 
@@ -63,17 +79,6 @@ Password
 name="password"
 type="password"
 placeholder="Create password"
-class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-</div>
-
-<div>
-<label class="block text-sm font-medium text-gray-600 mb-1">
-Confirm Password
-</label>
-
-<input
-type="password"
-placeholder="Repeat password"
 class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none">
 </div>
 

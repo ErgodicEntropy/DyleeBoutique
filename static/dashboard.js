@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bigArr = [...bigArr, temporaryPO[k]]
   }
   temporaryPO = bigArr.filter((value, index, self) => self.indexOf(value) == index);
-  temporaryPO = temporaryPO[0].map(product => ({product:product, productPrice:productPrices[product]}));
+  temporaryPO = temporaryPO.map(product => ({product:product, productPrice:productPrices[product]}));
   //sort by order (weak condition), sort by delivery/price (strong condition)
   temporaryPO.sort((a,b)=> b.productPrice - a.productPrice); //we sort by price because we assume cases of products ordered frequently but rarely delivered to be rare (as order and deliver correlate) to avoid downplaying such products
   

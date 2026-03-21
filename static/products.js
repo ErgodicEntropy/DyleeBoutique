@@ -403,6 +403,8 @@ overlay.innerHTML = `
 
 <input id="name" value="${product.name}" class="w-full border p-2 rounded">
 
+<input id="size" value="${product.size}" class="w-full border p-2 rounded">
+
 <input id="category" value="${product.category}" class="w-full border p-2 rounded">
 
 <input id="brand" value="${product.brand}" class="w-full border p-2 rounded">
@@ -450,6 +452,8 @@ document.getElementById("cancelBtn").onclick = () => overlay.remove();
 document.getElementById("saveBtn").onclick = async () => {
 
 product.name = document.getElementById("name").value;
+
+product.size = document.getElementById("size").value;
 
 product.category = document.getElementById("category").value;
 

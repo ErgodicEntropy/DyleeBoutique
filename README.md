@@ -10,14 +10,14 @@ A small e-commerce project for my sister
 - Fix order edit merge customers with same values (optional)
 - If an order is added with same customer name and phone, merge orders in one (optional, not recommended)
 - Add Customer/Client Management System on its own (like order and products and expenses) with more in-depth details
-- Add more products attributes (data model): version
+- Add more products attributes (data model): version and gender
 - Add more orders attributes (data model)
 - Add more customer attributes (data model)
 - Add more expenses attributes (data model)
 - Add more analytics metrics breakdown by field (finance, accounting, marketing, business, management) for better financial-accounting accuracy (target: fine-grained accuracy) -> useful for simulation, prediction, extrapolation, hindcast, forecast and decision-making (provisioning)
 - APIs to make automated campaign product posts on various social medias from the click of a button 
 - API for local market price estimation (priceData) or create a new one using flask + beautifulsoup for web scraping (avito, jumia, marjanemall, lemarketprice)
-- For moroccan markets: add search by category, brand and version (not just name)
+- For moroccan markets: add search by category, brand, version and image (not just name)
 - Add more classes/entites for realistic data models
 - Might replace localStorage by indexedDB (high storage capacity, allows complex data types like objects, async) or actual backend database (PHP's mysqli) or JSON files: localStorage can work in production (remote hosting) too but the risks are if the user clears it manually by mistake or use another browser or machine, insecurity, limited storage (5-10 MB), etc. => most likely solution: replace localStorage by indexedDB (still client-side or browser storage) + download data in the form of JSON or export PDF every once in a while. 
 - Choose a secure, robust, reliable and scalable hosting plan (local vs remote: which remote if remote) => most likely solution: static hosting

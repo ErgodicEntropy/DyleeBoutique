@@ -19,6 +19,7 @@ A small e-commerce project for my sister
 - API for local market price estimation (priceData) or create a new one using flask + beautifulsoup for web scraping (avito, jumia, marjanemall, lemarketprice)
 - For moroccan markets: add search by category, brand, version and image (not just name)
 - Add more classes/entites for realistic data models
+- Algorithmic Optimization: stock scalability (linear->logarithmic)
 - Might replace localStorage by indexedDB (high storage capacity, allows complex data types like objects, async) or actual backend database (PHP's mysqli) or JSON files: localStorage can work in production (remote hosting) too but the risks are if the user clears it manually by mistake or use another browser or machine, insecurity, limited storage (5-10 MB), etc. => most likely solution: replace localStorage by indexedDB (still client-side or browser storage) + download data in the form of JSON or export PDF every once in a while. 
 - Choose a secure, robust, reliable and scalable hosting plan (local vs remote: which remote if remote) => most likely solution: static hosting
 --> Solution: 

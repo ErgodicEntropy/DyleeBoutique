@@ -388,7 +388,7 @@ const affectedExpenses = expenses.filter(expense => expense.productId === produc
 
 let oldname = product.name;
 
-let oldstock = product.stock; 
+// let oldstock = product.stock; 
 
 const overlay = document.createElement("div");
 
